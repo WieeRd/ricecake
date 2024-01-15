@@ -16,5 +16,5 @@ per-file-ignores = { "__init__.py" = ["F403"] }
 
 
 [tool.pyright]
-include = ["ricecake"]
 pythonVersion = "3.8"
+include = ["ricecake"]
