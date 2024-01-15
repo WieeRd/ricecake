@@ -1,0 +1,20 @@
+[project]
+name = "ricecake"
+version = "v0.1.0"
+authors = [{ name = "WieeRd", email = "verywieerd@gmail.com" }]
+requires-python = ">=3.8"
+dependencies = []
+
+
+[tool.ruff]
+output-format = "grouped"
+select = ["E4", "E7", "E9", "F", "N", "B"]
+
+# F403: checks for wildcard imports (`from module import *`)
+# excuse: I will always be using * with modules with `__all__`
+per-file-ignores = { "__init__.py" = ["F403"] }
+
+
+[tool.pyright]
+include = ["ricecake"]
+pythonVersion = "3.8"
