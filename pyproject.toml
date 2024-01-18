@@ -9,38 +9,38 @@ dependencies = []
 [tool.ruff]
 output-format = "grouped"
 
+[tool.ruff.lint]
 # NOTE: exclude rules enforced by `ruff format`
-select = [
-    "F", # pyflakes
-    "E4", "E7", "E9", # pycodestyle
+extend-select = [
     "C90", # mccabe
     "N", # pep8-naming
     "UP", # pyupgrade
     "RUF", # ruff
     "PGH003", "PGH004", # pygrep-hooks
 
-    # flake8
+    # rules from flake8
     "ANN001", "ANN2", # annotations
     "BLE", # blind-except
     "FBT", # boolean-trap
     "B", # bugbear
     "A", # builtin
+    "COM818", "COM819", # commas
     "C4", # comprehensions
     "ISC", # implicit-str-concat
     "G", # logging-format
     "INP", # no-pep420
     "PIE", # pie
     "RET", # return
+    "SIM", # simplify
+    "TCH", # type-checking
 ]
 
-# NOTE: consider D, ASYNC, S, DTZ, FA, SIM, TCH, PL, FURB
-# NOTE: reconsider C90, BLE, and things that are clearly aware of
-# NOTE: consider enabling preview
-# NOTE: WARN: FIXME: HACK: XXX: I need sleep
-
 # F403: checks for wildcard imports (`from module import *`)
-# excuse: I will always be using * with modules with `__all__`
+# excuse: import * will always be used modules containing `__all__`
 per-file-ignores = { "__init__.py" = ["F403"] }
+
+[tool.ruff.format]
+preview = true
 
 
 [tool.pyright]
