@@ -10,16 +10,12 @@ dependencies = []
 output-format = "grouped"
 
 [tool.ruff.lint]
-# NOTE: exclude rules enforced by `ruff format`
 extend-select = [
     "C90", # mccabe
     "N", # pep8-naming
     "UP", # pyupgrade
-    "RUF", # ruff
-    "PGH003", "PGH004", # pygrep-hooks
-
-    # rules from flake8
     "ANN001", "ANN2", # annotations
+    "ASYNC", # async
     "BLE", # blind-except
     "FBT", # boolean-trap
     "B", # bugbear
@@ -33,6 +29,8 @@ extend-select = [
     "RET", # return
     "SIM", # simplify
     "TCH", # type-checking
+    "PGH003", "PGH004", # pygrep-hooks
+    "RUF", # ruff
 ]
 
 # F403: checks for wildcard imports (`from module import *`)
@@ -46,3 +44,4 @@ preview = true
 [tool.pyright]
 pythonVersion = "3.8"
 include = ["ricecake"]
+strict = ["ricecake"]
