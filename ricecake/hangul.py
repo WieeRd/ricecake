@@ -23,57 +23,60 @@ from collections.abc import Iterator
 SYLLABLE_START = 0xAC00  # '가'
 SYLLABLE_END = 0xD7A3  # '힣'
 
-CHOSEONG_MULTIPLIER = 588
-MOUM_MULTIPLIER = 28
-JONGSEONG_MULTIPLIER = 1
+CHOSEONG_COEF = 588
+JUNGSEONG_COEF = 28
+JONGSEONG_COEF = 1
 
 
 # https://en.wikipedia.org/wiki/Hangul_Jamo_(Unicode_block)
 JAMO_START = 0x1100  # 'ᄀ'
 JAMO_END = 0x11FF  # 'ᇿ'
 
-JAMO_MODERN_CHOSEONG_START = 0x1100  # 'ᄀ'
-JAMO_MODERN_CHOSEONG_END = 0x1112  # 'ᄒ'
+MODERN_CHOSEONG_START = 0x1100  # 'ᄀ'
+MODERN_CHOSEONG_END = 0x1112  # 'ᄒ'
 
-JAMO_ARCHAIC_CHOSEONG_START = 0x1113  # 'ᄓ'
-JAMO_ARCHAIC_CHOSEONG_END = 0x115E  # 'ᅞ'
+ARCHAIC_CHOSEONG_START = 0x1113  # 'ᄓ'
+ARCHAIC_CHOSEONG_END = 0x115E  # 'ᅞ'
 
-JAMO_CHOSEONG_FILLER = 0x115F
-JAMO_JONGSEONG_FILLER = 0x1160
+CHOSEONG_FILLER = 0x115F
+JONGSEONG_FILLER = 0x1160
 
-JAMO_MODERN_MOUM_START = 0x1161  # 'ᅡ'
-JAMO_MODERN_MOUM_END = 0x1175  # 'ᅵ'
+MODERN_JUNGSEONG_START = 0x1161  # 'ᅡ'
+MODERN_JUNGSEONG_END = 0x1175  # 'ᅵ'
 
-JAMO_ARCHAIC_MOUM_START = 0x1176  # 'ᅶ'
-JAMO_ARCHAIC_MOUM_END = 0x11A7  # 'ᆧ'
+ARCHAIC_JUNGSEONG_START = 0x1176  # 'ᅶ'
+ARCHAIC_JUNGSEONG_END = 0x11A7  # 'ᆧ'
 
-JAMO_MODERN_JONGSEONG_START = 0x11A8  # 'ᆨ'
-JAMO_MODERN_JONGSEONG_END = 0x11C2  # 'ᇂ'
+MODERN_JONGSEONG_START = 0x11A8  # 'ᆨ'
+MODERN_JONGSEONG_END = 0x11C2  # 'ᇂ'
 
-JAMO_ARCHAIC_JONGSEONG_START = 0x11C3  # 'ᇃ'
-JAMO_ARCHAIC_JONGSEONG_END = 0x11FF  # 'ᇿ'
+ARCHAIC_JONGSEONG_START = 0x11C3  # 'ᇃ'
+ARCHAIC_JONGSEONG_END = 0x11FF  # 'ᇿ'
 
 
 # https://en.wikipedia.org/wiki/Hangul_Compatibility_Jamo
 COMPAT_JAMO_START = 0x3130  # 'ㄱ' - 1 (U+3130 is reserved)
 COMPAT_JAMO_END = 0x318F  # 'ㆎ' + 1 (U+318F is reserved)
 
-COMPAT_JAMO_MODERN_JAUM_START = 0x3131  # 'ㄱ'
-COMPAT_JAMO_MODERN_JAUM_END = 0x314E  # 'ㅎ'
+COMPAT_MODERN_JAUM_START = 0x3131  # 'ㄱ'
+COMPAT_MODERN_JAUM_END = 0x314E  # 'ㅎ'
 
-COMPAT_JAMO_MODERN_MOUM_START = 0x314F  # 'ㅏ'
-COMPAT_JAMO_MODERN_MOUM_END = 0x314F  # 'ㅣ'
+COMPAT_MODERN_MOUM_START = 0x314F  # 'ㅏ'
+COMPAT_MODERN_MOUM_END = 0x314F  # 'ㅣ'
 
-COMPAT_JAMO_HANGUL_FILLER = 0x3164
+COMPAT_HANGUL_FILLER = 0x3164
 
-COMPAT_JAMO_ARCHAIC_JAUM_START = 0x3165  # 'ㅥ'
-COMPAT_JAMO_ARCHAIC_JAUM_END = 0x3186  # 'ㆎ'
+COMPAT_ARCHAIC_JAUM_START = 0x3165  # 'ㅥ'
+COMPAT_ARCHAIC_JAUM_END = 0x3186  # 'ㆎ'
 
-COMPAT_JAMO_ARCHAIC_MOUM_START = 0x3187  # 'ㆇ'
-COMPAT_JAMO_ARCHAIC_MOUM_END = 0x318E  # 'ㆎ'
+COMPAT_ARCHAIC_MOUM_START = 0x3187  # 'ㆇ'
+COMPAT_ARCHAIC_MOUM_END = 0x318E  # 'ㆎ'
 
 # FEAT: MAYBE: should I support Jamo Extended A, B and halfwidth variants?
-# FIX: find a shorter but reasonable names for constants
+# FIX: MAYBE: `is_*()` should return the `int | None`, with `int` being the offset
+
+# PERF: direct string comparison might be faster than invoking `ord`
+# | `"ㄱ" <= c <= "ㅎ"` vs `0x3131 <= ord(c) <= 0x314E`
 
 
 def is_syllable(c: str, /) -> bool:
@@ -170,23 +173,28 @@ def search_pattern(
         incremental: ...
     """
     for c in text:
+        code = ord(c)
         if jongseong_completion and is_syllable(c):
             # checks if the syllable is missing a jongseong
             # if so, yield a pattern that matches any jongseong
             # e.g. "슈" -> "[슈-슣]" / "슉" -> "슉"
-            code = ord(c)
-            if (code - SYLLABLE_START) % MOUM_MULTIPLIER == 0:
-                yield f"[{c}-{chr(code + MOUM_MULTIPLIER - 1)}]"
+            if (code - SYLLABLE_START) % JUNGSEONG_COEF == 0:
+                yield f"[{c}-{chr(code + JUNGSEONG_COEF - 1)}]"
 
-        elif choseong_search and is_compat_jamo(c):
+        elif (
+            choseong_search
+            and COMPAT_MODERN_JAUM_START <= code <= COMPAT_MODERN_JAUM_END
+        ):
             # compat jamo cannot be 1:1 mapped to jamo or syllable using algorithm
             # because jamo separates jongseong-only jaums while compat jamo does not
             # instead, consult the lookup table and yield a pattern that matches
             # choseong itself, or any syllable that starts with the choseong
-            offset = ord(c) - COMPAT_JAMO_START
+            offset = ord(c) - COMPAT_MODERN_JAUM_START
             yield _COMPAT_JAMO_CHOSEONG_PATTERN[offset] or c
 
         elif is_jamo(c):
+            # FEAT: preprocess text with `re.escape()` and `unicodedata.normalize("NFC", ...)`
+            # | should this be the caller's responsibility or this function's?
             raise ValueError("Hangul Jamo and NFD-normalized string are not supported")
 
         yield c
