@@ -18,7 +18,6 @@ __all__ = [
 
 from collections.abc import Iterator
 
-
 # https://en.wikipedia.org/wiki/Hangul_Syllables
 SYLLABLE_START = 0xAC00  # '가'
 SYLLABLE_END = 0xD7A3  # '힣'
