@@ -29,24 +29,13 @@ COMPAT_JAMO_START = 0x3130
 COMPAT_JAMO_END = 0x318F
 
 
-# NOTE: "The input string must be a single character." is getting repetitive
-# | consider other ways to convey the caveats and remove it
-# | - Mention just once in the module docs
-# | - "given character" -> "a single character"
-
-
 def is_syllable(c: str, /) -> bool:
-    """Checks if the given character is a Hangul Syllable.
-
-    The input string must be a single character.
-    """
+    """Checks if a character is a Hangul Syllable."""
     return SYLLABLE_START <= ord(c) <= SYLLABLE_END
 
 
 def is_jamo(c: str, /) -> bool:
-    """Checks if the given character is a Hangul Jamo.
-
-    The input string must be a single character.
+    """Checks if a character is a Hangul Jamo.
 
     !!! warn
 
@@ -58,18 +47,14 @@ def is_jamo(c: str, /) -> bool:
 
 
 def is_compat_jamo(c: str, /) -> bool:
-    """Checks if the given character is a Hangul Compatibility Jamo.
-
-    The input string must be a single character.
-    """
+    """Checks if a character is a Hangul Compatibility Jamo."""
     return COMPAT_JAMO_START <= ord(c) <= COMPAT_JAMO_END
 
 
 def is_hangul(c: str, /) -> bool:
-    """Checks if the given character is a Hangul character.
+    """Checks if a character is a Hangul character.
 
     Equivalent to `is_syllable(c) or is_jamo(c) or is_compat_jamo(c)`.
-    The input string must be a single character.
 
     !!! note
 
