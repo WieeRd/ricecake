@@ -1,6 +1,6 @@
 """Detection and (de)composition of Hangul unicode characters.
 
-TODO:
+Todo:
     Explain the general concepts of Hangul unicode in the glossary section.
 
 Glossary:
@@ -8,8 +8,6 @@ Glossary:
     - Hangul Jamo
     - Hangul Compatibility Jamo
 """
-
-from __future__ import annotations
 
 __all__ = [
     "is_syllable",
