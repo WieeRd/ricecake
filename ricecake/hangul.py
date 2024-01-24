@@ -171,7 +171,9 @@ def search_pattern(
         jongseong_completion: ...
         incremental: ...
     """
-    for c in text:
+    import re
+
+    for c in re.escape(text):
         code = ord(c)
         if jongseong_completion and is_syllable(c):
             # checks if the syllable is missing a jongseong
