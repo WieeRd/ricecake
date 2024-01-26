@@ -71,8 +71,21 @@ COMPAT_ARCHAIC_JAUM_END = 0x3186  # 'ㆎ'
 COMPAT_ARCHAIC_MOUM_START = 0x3187  # 'ㆇ'
 COMPAT_ARCHAIC_MOUM_END = 0x318E  # 'ㆎ'
 
-# FEAT: MAYBE: should I support Jamo Extended A, B and halfwidth variants?
-# FIX: MAYBE: `is_*()` should return the `int | None`, with `int` being the offset
+
+# https://en.wikipedia.org/wiki/Hangul_Jamo_Extended-A
+JAMO_EXTENDED_A_START = 0xA960
+JAMO_EXTENDED_A_END = 0xA97F
+
+# https://en.wikipedia.org/wiki/Hangul_Jamo_Extended-B
+JAMO_EXTENDED_B_START = 0xD7B0
+JAMO_EXTENDED_B_END = 0xD7FF
+
+# https://en.wikipedia.org/wiki/Halfwidth_and_Fullwidth_Forms_(Unicode_block)
+HALFWIDTH_JAMO_START = 0xFFA0
+HALFWIDTH_JAMO_END = 0xFFDC
+
+
+# FIX: LATER: `*_offset() -> int | None`
 
 # PERF: direct string comparison might be faster than invoking `ord`
 # | `"ㄱ" <= c <= "ㅎ"` vs `0x3131 <= ord(c) <= 0x314E`
