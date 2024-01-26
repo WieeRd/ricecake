@@ -61,7 +61,7 @@ COMPAT_MODERN_JAUM_START = 0x3131  # 'ㄱ'
 COMPAT_MODERN_JAUM_END = 0x314E  # 'ㅎ'
 
 COMPAT_MODERN_MOUM_START = 0x314F  # 'ㅏ'
-COMPAT_MODERN_MOUM_END = 0x314F  # 'ㅣ'
+COMPAT_MODERN_MOUM_END = 0x3163  # 'ㅣ'
 
 COMPAT_HANGUL_FILLER = 0x3164
 
@@ -188,6 +188,8 @@ def search_pattern(
 
     for c in re.escape(text):
         code = ord(c)
+
+        # FEAT: LATER: composite jamo completion e.g. "우" -> "위", "일" -> "읽"
         if jongseong_completion and is_syllable(c):
             # checks if the syllable is missing a jongseong
             # if so, yield a pattern that matches any jongseong
