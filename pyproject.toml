@@ -1,9 +1,21 @@
 [project]
 name = "ricecake"
-version = "v0.1.0"
+version = "0.1.0"
+description = "Fuzzy / incremental search for Korean texts."
 authors = [{ name = "WieeRd", email = "verywieerd@gmail.com" }]
 requires-python = ">=3.8"
 dependencies = []
+readme = "README.md"
+license = { text = "MIT" }
+
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+
+[tool.pdm]
+distribution = true
 
 
 [tool.ruff]
