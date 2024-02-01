@@ -7,7 +7,7 @@
 """
 
 import unicodedata as ud
-from collections.abc import Iterator
+from collections.abc import Callable
 
 
 def jamo_to_compat_jamo(jamo: str, /) -> str | None:
@@ -54,24 +54,31 @@ def decompose_jongseong(jongseong: str, /) -> tuple[str, str] | None:
 if __name__ == "__main__":
     import ricecake.hangul as hg
 
-    def _c(start: int, stop: int) -> Iterator[str]:
-        return map(chr, range(start, stop))
+    def _create_lookup_table(
+        convert: Callable[[str], str | None], base: int, end: int
+    ) -> list[str | None]:
+        return [convert(chr(code)) for code in range(base, end + 1)]
 
-    JAMO_TO_COMPAT_JAMO = [
-        jamo_to_compat_jamo(j) for j in _c(hg.JAMO_BASE, hg.JAMO_END + 1)
-    ]
-    COMPAT_JAUM_TO_CHOSEONG = [
-        compat_jaum_to_choseong(cj)
-        for cj in _c(hg.COMPAT_MODERN_JAUM_BASE, hg.COMPAT_MODERN_JAUM_END + 1)
-    ]
-    COMPAT_MOUM_TO_JUNGSEONG = [
-        compat_moum_to_jungseong(cm)
-        for cm in _c(hg.COMPAT_MODERN_MOUM_BASE, hg.COMPAT_MODERN_MOUM_END + 1)
-    ]
-    COMPAT_JAUM_TO_JONGSEONG = [
-        compat_jaum_to_jongseong(cj)
-        for cj in _c(hg.COMPAT_MODERN_JAUM_BASE, hg.COMPAT_MODERN_JAUM_END + 1)
-    ]
+    JAMO_TO_COMPAT_JAMO = _create_lookup_table(
+        jamo_to_compat_jamo,
+        hg.JAMO_BASE,
+        hg.JAMO_END,
+    )
+    COMPAT_JAUM_TO_CHOSEONG = _create_lookup_table(
+        compat_jaum_to_choseong,
+        hg.COMPAT_MODERN_JAUM_BASE,
+        hg.COMPAT_MODERN_JAUM_END,
+    )
+    COMPAT_MOUM_TO_JUNGSEONG = _create_lookup_table(
+        compat_moum_to_jungseong,
+        hg.COMPAT_MODERN_MOUM_BASE,
+        hg.COMPAT_MODERN_MOUM_END,
+    )
+    COMPAT_JAUM_TO_JONGSEONG = _create_lookup_table(
+        compat_jaum_to_jongseong,
+        hg.COMPAT_MODERN_JAUM_BASE,
+        hg.COMPAT_MODERN_JAUM_END,
+    )
 
     print(f"JAMO_TO_COMPAT_JAMO = {JAMO_TO_COMPAT_JAMO}\n")
     print(f"COMPAT_JAUM_TO_CHOSEONG = {COMPAT_JAUM_TO_CHOSEONG}\n")
