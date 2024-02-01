@@ -1,13 +1,8 @@
-"""Generate Jamo <-> Compat Jamo conversion lookup tables.
-
-* Jamo -> Compat Jamo
-* Compat Jaum -> Jamo Choseong
-* Compat Jaum -> Jamo Jongseong
-* Compat Moum -> Jamo Jungseong
-"""
+"""Jamo <-> Compatibility Jamo conversions."""
 
 import unicodedata as ud
 from collections.abc import Callable
+from typing import TypeVar
 
 
 def jamo_to_compat_jamo(jamo: str, /) -> str | None:
@@ -40,13 +35,26 @@ def compat_jaum_to_jongseong(compat_jaum: str, /) -> str:
     return ud.lookup(f"HANGUL JONGSEONG {name}")
 
 
-# FEAT: jaum decomposition ("ㄲ" -> ("ㄱ", "ㄱ"))
 def decompose_jongseong(jongseong: str, /) -> tuple[str, str] | None:
     """Decomposes a composite Jongseong into tuple of 2 Jongseongs."""
-    _name = ud.name(jongseong).split(" ")[-1]  # HANGUL JONGSEONG "KIYEOK"
+    name = ud.name(jongseong).split(" ")[-1]  # HANGUL JONGSEONG "KIYEOK"
 
-    # FEAT: SSANG{jaum}, {jaum}-{jaum}
-    raise NotImplementedError
+    # SSANG{jaum} e.g. SSANGKIYEOK
+    if name.startswith("SSANG"):
+        single = name.removeprefix("SSANG")
+        char = ud.lookup(f"HANGUL JONGSEONG {single}")
+        return char, char
+
+    # {jaum}-{jaum} e.g. RIEUL-KIYEOK
+    if "-" in name:
+        # NOTE: some archaic Jongseongs such as "ᇄ" are triplets, causing ValueError
+        # | but I am no linguist and decided that I do not care about archaic letters
+        first, second = name.split("-")
+        char1 = ud.lookup(f"HANGUL JONGSEONG {first}")
+        char2 = ud.lookup(f"HANGUL JONGSEONG {second}")
+        return char1, char2
+
+    return None
 
 
 # FEAT: compat jaum to choseong pattern ("ㄱ" -> "[ㄱ가-깋]")
@@ -54,9 +62,10 @@ def decompose_jongseong(jongseong: str, /) -> tuple[str, str] | None:
 if __name__ == "__main__":
     import ricecake.hangul as hg
 
+    T = TypeVar("T")
     def _create_lookup_table(
-        convert: Callable[[str], str | None], base: int, end: int
-    ) -> list[str | None]:
+        convert: Callable[[str], T], base: int, end: int
+    ) -> list[T]:
         return [convert(chr(code)) for code in range(base, end + 1)]
 
     JAMO_TO_COMPAT_JAMO = _create_lookup_table(
@@ -79,8 +88,14 @@ if __name__ == "__main__":
         hg.COMPAT_MODERN_JAUM_BASE,
         hg.COMPAT_MODERN_JAUM_END,
     )
+    DECOMPOSE_JONGSEONG = _create_lookup_table(
+        decompose_jongseong,
+        hg.MODERN_JONGSEONG_BASE,
+        hg.MODERN_JONGSEONG_END,
+    )
 
     print(f"JAMO_TO_COMPAT_JAMO = {JAMO_TO_COMPAT_JAMO}\n")
     print(f"COMPAT_JAUM_TO_CHOSEONG = {COMPAT_JAUM_TO_CHOSEONG}\n")
     print(f"COMPAT_MOUM_TO_JUNGSEONG = {COMPAT_MOUM_TO_JUNGSEONG}\n")
     print(f"COMPAT_JAUM_TO_JONGSEONG = {COMPAT_JAUM_TO_JONGSEONG}\n")
+    print(f"DECOMPOSE_JONGSEONG = {DECOMPOSE_JONGSEONG}\n")
