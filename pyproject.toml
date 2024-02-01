@@ -3,7 +3,7 @@ name = "ricecake"
 version = "0.1.0"
 description = "Fuzzy / incremental search for Korean texts."
 authors = [{ name = "WieeRd", email = "verywieerd@gmail.com" }]
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = []
 readme = "README.md"
 license = { text = "MIT" }
@@ -58,6 +58,6 @@ preview = true
 
 
 [tool.pyright]
-pythonVersion = "3.8"
+pythonVersion = "3.10"
 include = ["ricecake"]
 strict = ["ricecake"]

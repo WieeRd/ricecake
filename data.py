@@ -8,12 +8,11 @@
 
 from collections.abc import Iterator
 import unicodedata as ud
-from typing import Optional
 
 # import ricecake.hangul as hg
 
 
-def jamo_to_compat_jamo(jamo: str, /) -> Optional[str]:
+def jamo_to_compat_jamo(jamo: str, /) -> str | None:
     """Maps a Jamo character to a Compatibility Jamo character."""
     # man I hate exceptions, where are my monadic types at?
     try:
@@ -23,7 +22,7 @@ def jamo_to_compat_jamo(jamo: str, /) -> Optional[str]:
         return None
 
 
-def compat_jaum_to_choseong(compat_jaum: str, /) -> Optional[str]:
+def compat_jaum_to_choseong(compat_jaum: str, /) -> str | None:
     """Maps a Compatibility Jaum character to a Jamo Choseong character."""
     # why can't you just return `None` instead of raising?
     try:
@@ -33,7 +32,7 @@ def compat_jaum_to_choseong(compat_jaum: str, /) -> Optional[str]:
         return None
 
 
-def compat_moum_to_jungseong(compat_moum: str, /) -> Optional[str]:
+def compat_moum_to_jungseong(compat_moum: str, /) -> str | None:
     """Maps a Compatibility Moum character to a Jamo Jungseong character."""
     try:
         name = ud.name(compat_moum).split(" ")[-1]  # HANGUL LETTER "A"
@@ -42,7 +41,7 @@ def compat_moum_to_jungseong(compat_moum: str, /) -> Optional[str]:
         return None
 
 
-def compat_jaum_to_jongseong(compat_jaum: str, /) -> Optional[str]:
+def compat_jaum_to_jongseong(compat_jaum: str, /) -> str | None:
     """Maps a Compatibility Jaum character to a Jamo Jongseong character."""
     try:
         name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
