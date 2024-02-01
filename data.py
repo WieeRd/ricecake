@@ -63,6 +63,7 @@ if __name__ == "__main__":
     import ricecake.hangul as hg
 
     T = TypeVar("T")
+
     def _create_lookup_table(
         convert: Callable[[str], T], base: int, end: int
     ) -> list[T]:
