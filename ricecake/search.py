@@ -67,18 +67,18 @@ def search_pattern(
             # checks if the syllable is missing a jongseong
             # if so, yield a pattern that matches any jongseong
             # e.g. "슈" -> "[슈-슣]" / "슉" -> "슉"
-            if (code - hg.SYLLABLE_START) % hg.JUNGSEONG_COEF == 0:
+            if (code - hg.SYLLABLE_BASE) % hg.JUNGSEONG_COEF == 0:
                 yield f"[{c}-{chr(code + hg.JUNGSEONG_COEF - 1)}]"
 
         elif (
             choseong_search
-            and hg.COMPAT_MODERN_JAUM_START <= code <= hg.COMPAT_MODERN_JAUM_END
+            and hg.COMPAT_MODERN_JAUM_BASE <= code <= hg.COMPAT_MODERN_JAUM_END
         ):
             # compat jamo cannot be 1:1 mapped to jamo or syllable using algorithm
             # because jamo separates jongseong-only jaums while compat jamo does not
             # instead, consult the lookup table and yield a pattern that matches
             # choseong itself, or any syllable that starts with the choseong
-            offset = ord(c) - hg.COMPAT_MODERN_JAUM_START
+            offset = ord(c) - hg.COMPAT_MODERN_JAUM_BASE
             yield _COMPAT_JAMO_CHOSEONG_PATTERN[offset] or c
 
         elif hg.is_jamo(c):
