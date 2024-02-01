@@ -6,63 +6,78 @@
 * Compat Moum -> Jamo Jungseong
 """
 
+from collections.abc import Iterator
 import unicodedata as ud
+from typing import Optional
 
-import ricecake.hangul as hg
+# import ricecake.hangul as hg
 
-# print(f'"\\u{ord(compat_char):X}",  # {jamo_char} -> {compat_char}')
-# print(f"None,      # {jamo_char}")
 
-jamo_to_compat_jamo = []
-for code in range(hg.JAMO_START, hg.JAMO_END + 1):
-    jamo = chr(code)
-    name = ud.name(jamo).split()[-1]  # HANGUL CHOSEONG "KIYEOK"
-
+def jamo_to_compat_jamo(jamo: str, /) -> Optional[str]:
+    """Maps a Jamo character to a Compatibility Jamo character."""
+    # man I hate exceptions, where are my monadic types at?
     try:
-        compat_jamo = ud.lookup(f"HANGUL LETTER {name}")
-    except KeyError:
-        compat_jamo = None
+        name = ud.name(jamo).split(" ")[-1]  # HANGUL CHOSEONG "KIYEOK"
+        return ud.lookup(f"HANGUL LETTER {name}")
+    except (ValueError, KeyError):
+        return None
 
-    jamo_to_compat_jamo.append(compat_jamo)
 
-
-compat_jaum_to_choseong = []
-compat_jaum_to_jongseong = []
-for code in range(hg.COMPAT_MODERN_JAUM_START, hg.COMPAT_MODERN_JAUM_END + 1):
-    jaum = chr(code)
-    name = ud.name(jaum).split()[-1]  # HANGUL LETTER "KIYEOK"
-
-    # man I hate exceptions, where are my monads at?
+def compat_jaum_to_choseong(compat_jaum: str, /) -> Optional[str]:
+    """Maps a Compatibility Jaum character to a Jamo Choseong character."""
+    # why can't you just return `None` instead of raising?
     try:
-        choseong = ud.lookup(f"HANGUL CHOSEONG {name}")
-    except KeyError:
-        choseong = None
+        name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
+        return ud.lookup(f"HANGUL CHOSEONG {name}")
+    except (ValueError, KeyError):
+        return None
 
-    # why can't you just return None instead of raising KeyError
+
+def compat_moum_to_jungseong(compat_moum: str, /) -> Optional[str]:
+    """Maps a Compatibility Moum character to a Jamo Jungseong character."""
     try:
-        jongseong = ud.lookup(f"HANGUL JONGSEONG {name}")
-    except KeyError:
-        jongseong = None
-
-    compat_jaum_to_choseong.append(choseong)
-    compat_jaum_to_jongseong.append(jongseong)
+        name = ud.name(compat_moum).split(" ")[-1]  # HANGUL LETTER "A"
+        return ud.lookup(f"HANGUL JUNGSEONG {name}")
+    except (ValueError, KeyError):
+        return None
 
 
-compat_moum_to_jungseong = []
-for code in range(hg.COMPAT_MODERN_MOUM_START, hg.COMPAT_MODERN_MOUM_END + 1):
-    moum = chr(code)
-    name = ud.name(moum).split()[-1]  # HANGUL LETTER "A"
-
+def compat_jaum_to_jongseong(compat_jaum: str, /) -> Optional[str]:
+    """Maps a Compatibility Jaum character to a Jamo Jongseong character."""
     try:
-        jungseong = ud.lookup(f"HANGUL JUNGSEONG {name}")
-    except KeyError:  # <- its life is literally as valuable as a summer ant
-        jungseong = None
+        name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
+        return ud.lookup(f"HANGUL JONGSEONG {name}")
+    except (ValueError, KeyError):
+        return None
 
-    compat_moum_to_jungseong.append(jungseong)
 
-# FEAT: compat jamo to pattern ("ㄱ" -> "[ㄱ가-깋]")
+# FEAT: compat jaum to choseong pattern ("ㄱ" -> "[ㄱ가-깋]")
+# FEAT: jaum decomposition ("ㄲ" -> ("ㄱ", "ㄱ"))
+# FIX: ASAP: jungseong and jongseong does not have to be `Optional`
 
-print(f"JAMO_TO_COMPAT_JAMO = {jamo_to_compat_jamo}")
-print(f"COMPAT_JAUM_TO_CHOSEONG = {compat_jaum_to_choseong}")
-print(f"COMPAT_MOUM_TO_JUNGSEONG = {compat_moum_to_jungseong}")
-print(f"COMPAT_JAUM_TO_JONGSEONG = {compat_jaum_to_jongseong}")
+if __name__ == "__main__":
+    import ricecake.hangul as hg
+
+    def _c(start: int, stop: int) -> Iterator[str]:
+        return map(chr, range(start, stop))
+
+    JAMO_TO_COMPAT_JAMO = [
+        jamo_to_compat_jamo(j) for j in _c(hg.JAMO_START, hg.JAMO_END + 1)
+    ]
+    COMPAT_JAUM_TO_CHOSEONG = [
+        compat_jaum_to_choseong(cj)
+        for cj in _c(hg.COMPAT_MODERN_JAUM_START, hg.COMPAT_MODERN_JAUM_END + 1)
+    ]
+    COMPAT_MOUM_TO_JUNGSEONG = [
+        compat_moum_to_jungseong(cm)
+        for cm in _c(hg.COMPAT_MODERN_MOUM_START, hg.COMPAT_MODERN_MOUM_END + 1)
+    ]
+    COMPAT_JAUM_TO_JONGSEONG = [
+        compat_jaum_to_jongseong(cj)
+        for cj in _c(hg.COMPAT_MODERN_JAUM_START, hg.COMPAT_MODERN_JAUM_END + 1)
+    ]
+
+    print(f"JAMO_TO_COMPAT_JAMO = {JAMO_TO_COMPAT_JAMO}\n")
+    print(f"COMPAT_JAUM_TO_CHOSEONG = {COMPAT_JAUM_TO_CHOSEONG}\n")
+    print(f"COMPAT_MOUM_TO_JUNGSEONG = {COMPAT_MOUM_TO_JUNGSEONG}\n")
+    print(f"COMPAT_JAUM_TO_JONGSEONG = {COMPAT_JAUM_TO_JONGSEONG}\n")
