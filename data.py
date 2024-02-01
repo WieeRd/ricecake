@@ -6,63 +6,50 @@
 * Compat Moum -> Jamo Jungseong
 """
 
-from collections.abc import Iterator
 import unicodedata as ud
-
-# import ricecake.hangul as hg
+from collections.abc import Iterator
 
 
 def jamo_to_compat_jamo(jamo: str, /) -> str | None:
     """Maps a Jamo character to a Compatibility Jamo character."""
-    # man I hate exceptions, where are my monadic types at?
+    name = ud.name(jamo).split(" ")[-1]  # HANGUL CHOSEONG "KIYEOK"
     try:
-        name = ud.name(jamo).split(" ")[-1]  # HANGUL CHOSEONG "KIYEOK"
         return ud.lookup(f"HANGUL LETTER {name}")
-    except (ValueError, KeyError):
+    except KeyError:
         return None
 
 
 def compat_jaum_to_choseong(compat_jaum: str, /) -> str | None:
     """Maps a Compatibility Jaum character to a Jamo Choseong character."""
-    # why can't you just return `None` instead of raising?
+    name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
     try:
-        name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
         return ud.lookup(f"HANGUL CHOSEONG {name}")
-    except (ValueError, KeyError):
+    except KeyError:
         return None
 
 
-def compat_moum_to_jungseong(compat_moum: str, /) -> str | None:
+def compat_moum_to_jungseong(compat_moum: str, /) -> str:
     """Maps a Compatibility Moum character to a Jamo Jungseong character."""
-    try:
-        name = ud.name(compat_moum).split(" ")[-1]  # HANGUL LETTER "A"
-        return ud.lookup(f"HANGUL JUNGSEONG {name}")
-    except (ValueError, KeyError):
-        return None
+    name = ud.name(compat_moum).split(" ")[-1]  # HANGUL LETTER "A"
+    return ud.lookup(f"HANGUL JUNGSEONG {name}")
 
 
-def compat_jaum_to_jongseong(compat_jaum: str, /) -> str | None:
+def compat_jaum_to_jongseong(compat_jaum: str, /) -> str:
     """Maps a Compatibility Jaum character to a Jamo Jongseong character."""
-    try:
-        name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
-        return ud.lookup(f"HANGUL JONGSEONG {name}")
-    except (ValueError, KeyError):
-        return None
+    name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
+    return ud.lookup(f"HANGUL JONGSEONG {name}")
 
 
+# FEAT: jaum decomposition ("ㄲ" -> ("ㄱ", "ㄱ"))
 def decompose_jongseong(jongseong: str, /) -> tuple[str, str] | None:
     """Decomposes a composite Jongseong into tuple of 2 Jongseongs."""
-    try:
-        ud.name(jongseong).split(" ")[-1]  # HANGUL JONGSEONG "KIYEOK"
-    except ValueError:
-        return None
+    _name = ud.name(jongseong).split(" ")[-1]  # HANGUL JONGSEONG "KIYEOK"
 
-    # SSANG{jaum}, {jaum}-{jaum}
+    # FEAT: SSANG{jaum}, {jaum}-{jaum}
+    raise NotImplementedError
 
 
 # FEAT: compat jaum to choseong pattern ("ㄱ" -> "[ㄱ가-깋]")
-# FEAT: jaum decomposition ("ㄲ" -> ("ㄱ", "ㄱ"))
-# FIX: ASAP: jungseong and jongseong does not have to be `Optional`
 
 if __name__ == "__main__":
     import ricecake.hangul as hg
