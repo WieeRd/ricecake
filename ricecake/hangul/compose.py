@@ -3,12 +3,12 @@
 
 def compose(cho: str, jung: str, jong: str | None) -> str:
     """Composes Choseong, Jungseong, and Jongseong into a Syllable."""
-    ...
+    raise NotImplementedError
 
 
 def decompose(syl: str) -> tuple[str, str, str | None]:
     """Decomposes a Syllable into Choseong, Jungseong, and Jongseong."""
-    ...
+    raise NotImplementedError
 
 
 # FEAT: decompose composite Jaum and Moum into tuple of str
