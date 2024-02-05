@@ -4,6 +4,7 @@ import unicodedata as ud
 from collections.abc import Callable
 from typing import TypeVar
 
+# FIX: moum to jungseong can be 1:1 mapped; it does not need a lookup table
 
 def jamo_to_compat_jamo(jamo: str, /) -> str | None:
     """Maps a Jamo character to a Compatibility Jamo character."""
@@ -58,6 +59,7 @@ def decompose_jongseong(jongseong: str, /) -> tuple[str, str] | None:
 
 
 # FEAT: compat jaum to choseong pattern ("ㄱ" -> "[ㄱ가-깋]")
+# FEAT: generate composite moum completion lookup table
 
 if __name__ == "__main__":
     import ricecake.hangul as hg
