@@ -1,4 +1,4 @@
-"""Identifying unicode Hangul Characters."""
+"""Identifying Unicode Hangul Characters."""
 
 # https://en.wikipedia.org/wiki/Hangul_Syllables
 SYLLABLE_BASE = 0xAC00  # '가'
@@ -106,4 +106,48 @@ def is_hangul(c: str, /) -> bool:
     )
 
 
-# FIX: LATER: `*_offset() -> int | None`
+# FIX: MAYBE: should `_offset()` return None or raise ValueError?
+# DOCS: LATER: either way, it should be documented
+def modern_choseong_offset(c: str, /) -> int | None:
+    """Gets the Choseong offset of a modern Hangul Jamo character."""
+    code = ord(c)
+    if MODERN_CHOSEONG_BASE <= code <= MODERN_CHOSEONG_END:
+        return code - MODERN_CHOSEONG_BASE
+    return None
+
+
+def modern_jungseong_offset(c: str, /) -> int | None:
+    """Returns the Jungseong offset of a modern Hangul Jamo character."""
+    code = ord(c)
+    if MODERN_JUNGSEONG_BASE <= code <= MODERN_JUNGSEONG_END:
+        return code - MODERN_JUNGSEONG_BASE
+    return None
+
+
+def modern_jongseong_offset(c: str, /) -> int | None:
+    """Returns the Jungseong offset of a modern Hangul Jamo character.
+
+    Note that unlike Choseong and Jungseong, Jongseong offset starts from 1.
+    This is because offset 0 is used to denote the lack of Jongseong
+    when composing a Hangul Syllable from Jamo offsets and vice versa.
+    """
+    code = ord(c)
+    if MODERN_JONGSEONG_BASE <= code <= MODERN_JONGSEONG_END:
+        return code - MODERN_JONGSEONG_BASE + 1
+    return None
+
+
+def compat_modern_jaum_offset(c: str, /) -> int | None:
+    """Returns the Jaum offset of a modern Hangul Compatibility Jamo character."""
+    code = ord(c)
+    if COMPAT_MODERN_JAUM_BASE <= code <= COMPAT_MODERN_JAUM_END:
+        return code - COMPAT_MODERN_JAUM_BASE
+    return None
+
+
+def compat_modern_moum_offset(c: str, /) -> int | None:
+    """Returns the Moum offset of a modern Hangul Compatibility Jamo character."""
+    code = ord(c)
+    if COMPAT_MODERN_MOUM_BASE <= code <= COMPAT_MODERN_MOUM_END:
+        return code - COMPAT_MODERN_MOUM_BASE
+    return None
