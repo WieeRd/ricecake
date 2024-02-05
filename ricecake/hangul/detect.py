@@ -9,6 +9,7 @@ JUNGSEONG_COEF = 28
 JONGSEONG_COEF = 1
 
 
+# FIX: MAYBE: MODERN_{kind} vs {kind}_MODERN
 # https://en.wikipedia.org/wiki/Hangul_Jamo_(Unicode_block)
 JAMO_BASE = 0x1100  # 'ᄀ'
 JAMO_END = 0x11FF  # 'ᇿ'

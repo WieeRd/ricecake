@@ -6,6 +6,7 @@ from typing import TypeVar
 
 # FIX: moum to jungseong can be 1:1 mapped; it does not need a lookup table
 
+
 def jamo_to_compat_jamo(jamo: str, /) -> str | None:
     """Maps a Jamo character to a Compatibility Jamo character."""
     name = ud.name(jamo).split(" ")[-1]  # HANGUL CHOSEONG "KIYEOK"
