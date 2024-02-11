@@ -79,18 +79,18 @@ if __name__ == "__main__":
     )
     COMPAT_JAUM_TO_CHOSEONG = _create_lookup_table(
         compat_jaum_to_choseong,
-        hg.COMPAT_MODERN_JAUM_BASE,
-        hg.COMPAT_MODERN_JAUM_END,
+        hg.MODERN_COMPAT_JAUM_BASE,
+        hg.MODERN_COMPAT_JAUM_END,
     )
     COMPAT_MOUM_TO_JUNGSEONG = _create_lookup_table(
         compat_moum_to_jungseong,
-        hg.COMPAT_MODERN_MOUM_BASE,
-        hg.COMPAT_MODERN_MOUM_END,
+        hg.MODERN_COMPAT_MOUM_BASE,
+        hg.MODERN_COMPAT_MOUM_END,
     )
     COMPAT_JAUM_TO_JONGSEONG = _create_lookup_table(
         compat_jaum_to_jongseong,
-        hg.COMPAT_MODERN_JAUM_BASE,
-        hg.COMPAT_MODERN_JAUM_END,
+        hg.MODERN_COMPAT_JAUM_BASE,
+        hg.MODERN_COMPAT_JAUM_END,
     )
     DECOMPOSE_JONGSEONG = _create_lookup_table(
         decompose_jongseong,

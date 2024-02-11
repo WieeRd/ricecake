@@ -9,7 +9,6 @@ JUNGSEONG_COEF = 28
 JONGSEONG_COEF = 1
 
 
-# FIX: MAYBE: MODERN_{kind} vs {kind}_MODERN
 # https://en.wikipedia.org/wiki/Hangul_Jamo_(Unicode_block)
 JAMO_BASE = 0x1100  # 'ᄀ'
 JAMO_END = 0x11FF  # 'ᇿ'
@@ -40,19 +39,19 @@ ARCHAIC_JONGSEONG_END = 0x11FF  # 'ᇿ'
 COMPAT_JAMO_BASE = 0x3130  # 'ㄱ' - 1 (U+3130 is reserved)
 COMPAT_JAMO_END = 0x318F  # 'ㆎ' + 1 (U+318F is reserved)
 
-COMPAT_MODERN_JAUM_BASE = 0x3131  # 'ㄱ'
-COMPAT_MODERN_JAUM_END = 0x314E  # 'ㅎ'
+MODERN_COMPAT_JAUM_BASE = 0x3131  # 'ㄱ'
+MODERN_COMPAT_JAUM_END = 0x314E  # 'ㅎ'
 
-COMPAT_MODERN_MOUM_BASE = 0x314F  # 'ㅏ'
-COMPAT_MODERN_MOUM_END = 0x3163  # 'ㅣ'
+MODERN_COMPAT_MOUM_BASE = 0x314F  # 'ㅏ'
+MODERN_COMPAT_MOUM_END = 0x3163  # 'ㅣ'
 
 COMPAT_HANGUL_FILLER = 0x3164
 
-COMPAT_ARCHAIC_JAUM_BASE = 0x3165  # 'ㅥ'
-COMPAT_ARCHAIC_JAUM_END = 0x3186  # 'ㆎ'
+ARCHAIC_COMPAT_JAUM_BASE = 0x3165  # 'ㅥ'
+ARCHAIC_COMPAT_JAUM_END = 0x3186  # 'ㆎ'
 
-COMPAT_ARCHAIC_MOUM_BASE = 0x3187  # 'ㆇ'
-COMPAT_ARCHAIC_MOUM_END = 0x318E  # 'ㆎ'
+ARCHAIC_COMPAT_MOUM_BASE = 0x3187  # 'ㆇ'
+ARCHAIC_COMPAT_MOUM_END = 0x318E  # 'ㆎ'
 
 
 # https://en.wikipedia.org/wiki/Hangul_Jamo_Extended-A
@@ -137,17 +136,17 @@ def modern_jongseong_offset(c: str, /) -> int:
     raise ValueError("expected a modern Hangul Jamo Jongseong character")
 
 
-def compat_modern_jaum_offset(c: str, /) -> int:
+def modern_compat_jaum_offset(c: str, /) -> int:
     """Returns the Jaum offset of a modern Hangul Compatibility Jamo character."""
     code = ord(c)
-    if COMPAT_MODERN_JAUM_BASE <= code <= COMPAT_MODERN_JAUM_END:
-        return code - COMPAT_MODERN_JAUM_BASE
+    if MODERN_COMPAT_JAUM_BASE <= code <= MODERN_COMPAT_JAUM_END:
+        return code - MODERN_COMPAT_JAUM_BASE
     raise ValueError("expected a modern Hangul Compatibility Jamo Jaum character")
 
 
-def compat_modern_moum_offset(c: str, /) -> int:
+def modern_compat_moum_offset(c: str, /) -> int:
     """Returns the Moum offset of a modern Hangul Compatibility Jamo character."""
     code = ord(c)
-    if COMPAT_MODERN_MOUM_BASE <= code <= COMPAT_MODERN_MOUM_END:
-        return code - COMPAT_MODERN_MOUM_BASE
+    if MODERN_COMPAT_MOUM_BASE <= code <= MODERN_COMPAT_MOUM_END:
+        return code - MODERN_COMPAT_MOUM_BASE
     raise ValueError("expected a modern Hangul Compatibility Jamo Moum character")
