@@ -107,25 +107,24 @@ def is_hangul(c: str, /) -> bool:
     )
 
 
-# FIX: MAYBE: should `_offset()` return None or raise ValueError?
-# DOCS: LATER: either way, it should be documented
-def modern_choseong_offset(c: str, /) -> int | None:
-    """Gets the Choseong offset of a modern Hangul Jamo character."""
+# DOCS: LATER: document `Raises` section of `_offset()` functions
+def modern_choseong_offset(c: str, /) -> int:
+    """Returns the Choseong offset of a modern Hangul Jamo character."""
     code = ord(c)
     if MODERN_CHOSEONG_BASE <= code <= MODERN_CHOSEONG_END:
         return code - MODERN_CHOSEONG_BASE
-    return None
+    raise ValueError("expected a modern Hangul Jamo Choseong character")
 
 
-def modern_jungseong_offset(c: str, /) -> int | None:
+def modern_jungseong_offset(c: str, /) -> int:
     """Returns the Jungseong offset of a modern Hangul Jamo character."""
     code = ord(c)
     if MODERN_JUNGSEONG_BASE <= code <= MODERN_JUNGSEONG_END:
         return code - MODERN_JUNGSEONG_BASE
-    return None
+    raise ValueError("expected a modern Hangul Jamo Jungseong character")
 
 
-def modern_jongseong_offset(c: str, /) -> int | None:
+def modern_jongseong_offset(c: str, /) -> int:
     """Returns the Jungseong offset of a modern Hangul Jamo character.
 
     Note that unlike Choseong and Jungseong, Jongseong offset starts from 1.
@@ -135,20 +134,20 @@ def modern_jongseong_offset(c: str, /) -> int | None:
     code = ord(c)
     if MODERN_JONGSEONG_BASE <= code <= MODERN_JONGSEONG_END:
         return code - MODERN_JONGSEONG_BASE + 1
-    return None
+    raise ValueError("expected a modern Hangul Jamo Jongseong character")
 
 
-def compat_modern_jaum_offset(c: str, /) -> int | None:
+def compat_modern_jaum_offset(c: str, /) -> int:
     """Returns the Jaum offset of a modern Hangul Compatibility Jamo character."""
     code = ord(c)
     if COMPAT_MODERN_JAUM_BASE <= code <= COMPAT_MODERN_JAUM_END:
         return code - COMPAT_MODERN_JAUM_BASE
-    return None
+    raise ValueError("expected a modern Hangul Compatibility Jamo Jaum character")
 
 
-def compat_modern_moum_offset(c: str, /) -> int | None:
+def compat_modern_moum_offset(c: str, /) -> int:
     """Returns the Moum offset of a modern Hangul Compatibility Jamo character."""
     code = ord(c)
     if COMPAT_MODERN_MOUM_BASE <= code <= COMPAT_MODERN_MOUM_END:
         return code - COMPAT_MODERN_MOUM_BASE
-    return None
+    raise ValueError("expected a modern Hangul Compatibility Jamo Moum character")
