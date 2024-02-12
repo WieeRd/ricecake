@@ -72,13 +72,13 @@ def search_pattern(
 
         elif (
             choseong_search
-            and hg.COMPAT_MODERN_JAUM_BASE <= code <= hg.COMPAT_MODERN_JAUM_END
+            and hg.MODERN_COMPAT_JAUM_BASE <= code <= hg.MODERN_COMPAT_JAUM_END
         ):
             # compat jamo cannot be 1:1 mapped to jamo or syllable using algorithm
             # because jamo separates jongseong-only jaums while compat jamo does not
             # instead, consult the lookup table and yield a pattern that matches
             # choseong itself, or any syllable that starts with the choseong
-            offset = ord(c) - hg.COMPAT_MODERN_JAUM_BASE
+            offset = ord(c) - hg.MODERN_COMPAT_JAUM_BASE
             yield _COMPAT_JAMO_CHOSEONG_PATTERN[offset] or c
 
         elif hg.is_jamo(c):

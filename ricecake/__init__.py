@@ -5,3 +5,5 @@
 :copyright: (c) 2024-present WieeRd
 :license: MIT, see LICENSE for more details.
 """
+
+from .search import *
