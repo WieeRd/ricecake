@@ -4,8 +4,6 @@ import unicodedata as ud
 from collections.abc import Callable
 from typing import TypeVar
 
-# FIX: moum to jungseong can be 1:1 mapped; it does not need a lookup table
-
 
 def jamo_to_compat_jamo(jamo: str, /) -> str | None:
     """Maps a Jamo character to a Compatibility Jamo character."""
@@ -23,12 +21,6 @@ def compat_jaum_to_choseong(compat_jaum: str, /) -> str | None:
         return ud.lookup(f"HANGUL CHOSEONG {name}")
     except KeyError:
         return None
-
-
-def compat_moum_to_jungseong(compat_moum: str, /) -> str:
-    """Maps a Compatibility Moum character to a Jamo Jungseong character."""
-    name = ud.name(compat_moum).split(" ")[-1]  # HANGUL LETTER "A"
-    return ud.lookup(f"HANGUL JUNGSEONG {name}")
 
 
 def compat_jaum_to_jongseong(compat_jaum: str, /) -> str:
@@ -67,39 +59,32 @@ if __name__ == "__main__":
 
     T = TypeVar("T")
 
-    def _create_lookup_table(
-        convert: Callable[[str], T], base: int, end: int
-    ) -> list[T]:
+    def _mklookup(convert: Callable[[str], T], base: int, end: int) -> list[T]:
         return [convert(chr(code)) for code in range(base, end + 1)]
 
-    JAMO_TO_COMPAT_JAMO = _create_lookup_table(
+    CHOSEONG_TO_COMPAT_JAUM = _mklookup(
         jamo_to_compat_jamo,
-        hg.JAMO_BASE,
-        hg.JAMO_END,
+        hg.MODERN_CHOSEONG_BASE,
+        hg.MODERN_CHOSEONG_END,
     )
-    COMPAT_JAUM_TO_CHOSEONG = _create_lookup_table(
-        compat_jaum_to_choseong,
-        hg.MODERN_COMPAT_JAUM_BASE,
-        hg.MODERN_COMPAT_JAUM_END,
-    )
-    COMPAT_MOUM_TO_JUNGSEONG = _create_lookup_table(
-        compat_moum_to_jungseong,
-        hg.MODERN_COMPAT_MOUM_BASE,
-        hg.MODERN_COMPAT_MOUM_END,
-    )
-    COMPAT_JAUM_TO_JONGSEONG = _create_lookup_table(
-        compat_jaum_to_jongseong,
-        hg.MODERN_COMPAT_JAUM_BASE,
-        hg.MODERN_COMPAT_JAUM_END,
-    )
-    DECOMPOSE_JONGSEONG = _create_lookup_table(
-        decompose_jongseong,
+    JONGSEONG_TO_COMPAT_JAUM = _mklookup(
+        jamo_to_compat_jamo,
         hg.MODERN_JONGSEONG_BASE,
         hg.MODERN_JONGSEONG_END,
     )
 
-    print(f"JAMO_TO_COMPAT_JAMO = {JAMO_TO_COMPAT_JAMO}\n")
+    COMPAT_JAUM_TO_CHOSEONG = _mklookup(
+        compat_jaum_to_choseong,
+        hg.MODERN_COMPAT_JAUM_BASE,
+        hg.MODERN_COMPAT_JAUM_END,
+    )
+    COMPAT_JAUM_TO_JONGSEONG = _mklookup(
+        compat_jaum_to_jongseong,
+        hg.MODERN_COMPAT_JAUM_BASE,
+        hg.MODERN_COMPAT_JAUM_END,
+    )
+
+    print(f"CHOSEONG_TO_COMPAT_JAUM = {CHOSEONG_TO_COMPAT_JAUM}\n")
+    print(f"JONGSEONG_TO_COMPAT_JAUM = {JONGSEONG_TO_COMPAT_JAUM}\n")
     print(f"COMPAT_JAUM_TO_CHOSEONG = {COMPAT_JAUM_TO_CHOSEONG}\n")
-    print(f"COMPAT_MOUM_TO_JUNGSEONG = {COMPAT_MOUM_TO_JUNGSEONG}\n")
     print(f"COMPAT_JAUM_TO_JONGSEONG = {COMPAT_JAUM_TO_JONGSEONG}\n")
-    print(f"DECOMPOSE_JONGSEONG = {DECOMPOSE_JONGSEONG}\n")
