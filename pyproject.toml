@@ -25,7 +25,6 @@ output-format = "grouped"
 extend-select = [
     "C90", # mccabe
     "N", # pep8-naming
-    "D", # pydocstyle
     "UP", # pyupgrade
     "ANN001", "ANN2", # annotations
     "ASYNC", # async
@@ -46,12 +45,8 @@ extend-select = [
     "RUF", # ruff
 ]
 
-# F403: checks for wildcard imports (`from module import *`)
-# excuse: import * will always be used modules containing `__all__`
+# allow wildcard imports in `__init__.py`
 per-file-ignores = { "__init__.py" = ["F403"] }
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
 
 [tool.ruff.format]
 preview = true

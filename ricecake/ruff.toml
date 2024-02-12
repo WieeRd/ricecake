@@ -1,0 +1,7 @@
+extend = "../pyproject.toml"
+
+[lint]
+extend-select = ["D"] # pydocstyle
+
+[lint.pydocstyle]
+convention = "google"

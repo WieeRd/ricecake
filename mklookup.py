@@ -6,7 +6,6 @@ from typing import TypeVar
 
 
 def jamo_to_compat_jamo(jamo: str, /) -> str | None:
-    """Maps a Jamo character to a Compatibility Jamo character."""
     name = ud.name(jamo).split(" ")[-1]  # HANGUL CHOSEONG "KIYEOK"
     try:
         return ud.lookup(f"HANGUL LETTER {name}")
@@ -15,7 +14,6 @@ def jamo_to_compat_jamo(jamo: str, /) -> str | None:
 
 
 def compat_jaum_to_choseong(compat_jaum: str, /) -> str | None:
-    """Maps a Compatibility Jaum character to a Jamo Choseong character."""
     name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
     try:
         return ud.lookup(f"HANGUL CHOSEONG {name}")
@@ -24,13 +22,11 @@ def compat_jaum_to_choseong(compat_jaum: str, /) -> str | None:
 
 
 def compat_jaum_to_jongseong(compat_jaum: str, /) -> str:
-    """Maps a Compatibility Jaum character to a Jamo Jongseong character."""
     name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
     return ud.lookup(f"HANGUL JONGSEONG {name}")
 
 
 def decompose_jongseong(jongseong: str, /) -> tuple[str, str] | None:
-    """Decomposes a composite Jongseong into tuple of 2 Jongseongs."""
     name = ud.name(jongseong).split(" ")[-1]  # HANGUL JONGSEONG "KIYEOK"
 
     # SSANG{jaum} e.g. SSANGKIYEOK
@@ -59,26 +55,26 @@ if __name__ == "__main__":
 
     T = TypeVar("T")
 
-    def _mklookup(convert: Callable[[str], T], base: int, end: int) -> list[T]:
+    def mklookup(convert: Callable[[str], T], base: int, end: int) -> list[T]:
         return [convert(chr(code)) for code in range(base, end + 1)]
 
-    CHOSEONG_TO_COMPAT_JAUM = _mklookup(
+    CHOSEONG_TO_COMPAT_JAUM = mklookup(
         jamo_to_compat_jamo,
         hg.MODERN_CHOSEONG_BASE,
         hg.MODERN_CHOSEONG_END,
     )
-    JONGSEONG_TO_COMPAT_JAUM = _mklookup(
+    JONGSEONG_TO_COMPAT_JAUM = mklookup(
         jamo_to_compat_jamo,
         hg.MODERN_JONGSEONG_BASE,
         hg.MODERN_JONGSEONG_END,
     )
 
-    COMPAT_JAUM_TO_CHOSEONG = _mklookup(
+    COMPAT_JAUM_TO_CHOSEONG = mklookup(
         compat_jaum_to_choseong,
         hg.MODERN_COMPAT_JAUM_BASE,
         hg.MODERN_COMPAT_JAUM_END,
     )
-    COMPAT_JAUM_TO_JONGSEONG = _mklookup(
+    COMPAT_JAUM_TO_JONGSEONG = mklookup(
         compat_jaum_to_jongseong,
         hg.MODERN_COMPAT_JAUM_BASE,
         hg.MODERN_COMPAT_JAUM_END,
