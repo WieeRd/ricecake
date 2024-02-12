@@ -6,4 +6,4 @@
 
 from .compose import *
 from .convert import *
-from .detect import *
+from .offset import *

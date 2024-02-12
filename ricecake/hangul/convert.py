@@ -1,6 +1,6 @@
 """Conversion between Hangul Jamo and Compatibility Jamo."""
 
-from .detect import MODERN_JUNGSEONG_BASE, modern_compat_moum_offset
+from .offset import MODERN_JUNGSEONG_BASE, modern_compat_moum_offset
 
 __all__ = [
     "jamo_to_compat_jamo",

@@ -1,4 +1,9 @@
-"""Identifying Unicode Hangul Characters."""
+"""Identifying Unicode Hangul Characters.
+
+- `*_BASE` & `*_END`: Hangul Unicode codepoint ranges
+- `is_*()`: Detect Hangul characters
+- `*_offset()`: Calculates codepoint offsets
+"""
 
 # https://en.wikipedia.org/wiki/Hangul_Syllables
 SYLLABLE_BASE = 0xAC00  # '가'
