@@ -17,6 +17,12 @@ build-backend = "pdm.backend"
 [tool.pdm]
 distribution = true
 
+[tool.pdm.dev-dependencies]
+lint = [
+    "ruff>=0.2.1",
+    "pyright>=1.1.350",
+]
+
 
 [tool.ruff]
 output-format = "grouped"
