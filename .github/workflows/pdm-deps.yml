@@ -1,0 +1,15 @@
+name: PDM update
+
+on:
+  schedule:
+    - cron: "20 22 * * 3"
+
+jobs:
+  update-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pdm-project/update-deps-action@main
+        with:
+          commit-message: "chore(deps): update pdm.lock"
+          pr-title: "chore(deps): update pdm.lock"

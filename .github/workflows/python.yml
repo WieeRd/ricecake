@@ -29,12 +29,17 @@ jobs:
         with:
           cache: true
 
-      - run: pdm venv create && pdm sync
-      - run: echo "$(pdm venv --path in-project)/bin" >> $GITHUB_PATH
+      - name: Install deps
+        run: pdm sync
+      - name: Activate venv
+        run: echo "$(pdm venv --path in-project)/bin" >> $GITHUB_PATH
 
-      - run: ruff check --output-format github
-      - run: ruff check --extend-select I --fix-only
-      - run: ruff format
+      - name: Check
+        run: ruff check --output-format github
+      - name: Fix
+        run: ruff check --extend-select I --fix-only
+      - name: Format
+        run: ruff format
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
