@@ -14,33 +14,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.8"
+      # CI: LATER: activate pdm venv for 3rd party dependencies
+      # | not required right now but discord.py converters are planned
       - uses: jakebailey/pyright-action@v2
 
   ruff:
     name: Ruff
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Ruff
-        run: pipx run ruff check --output-format github
-
-  black:
-    name: Black
-    needs: ["pyright", "ruff"]
-    runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Install Ruff
-        run: pipx install ruff
-      - name: Run isort
-        run: ruff check --select I --fix
-      - name: Run Black
-        run: ruff format
+      - uses: pdm-project/setup-pdm@v4
+        with:
+          cache: true
+
+      - run: pdm venv create && pdm sync
+      - run: echo "$(pdm venv --path in-project)/bin" >> $GITHUB_PATH
+
+      - run: ruff check --output-format github
+      - run: ruff check --extend-select I --fix-only
+      - run: ruff format
+
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "style: black + isort"
+          commit_message: "style: ruff"
