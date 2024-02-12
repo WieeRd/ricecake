@@ -2,7 +2,7 @@
 
 - `*_BASE` & `*_END`: Hangul Unicode codepoint ranges
 - `is_*()`: Detect Hangul characters
-- `*_offset()`: Calculates codepoint offsets
+- `*_offset()`: Calculate codepoint offsets
 """
 
 # https://en.wikipedia.org/wiki/Hangul_Syllables
@@ -111,6 +111,30 @@ def is_hangul(c: str, /) -> bool:
     )
 
 
+def syllable_offset(c: str, /) -> int:
+    """Returns the offset of a Hangul Syllable character.
+
+    Raises:
+        ValueError: If the given character is not a Hangul Syllable.
+    """
+    code = ord(c)
+    if SYLLABLE_BASE <= code <= SYLLABLE_BASE:
+        return code - SYLLABLE_BASE
+    raise ValueError("expected a Hangul Syllable character")
+
+
+def jamo_offset(c: str, /) -> int:
+    """Returns the offset of a Hangul Jamo character.
+
+    Raises:
+        ValueError: If the given character is not a Hangul Jamo.
+    """
+    code = ord(c)
+    if JAMO_BASE <= code <= JAMO_END:
+        return code - JAMO_BASE
+    raise ValueError("expected a Hangul Jamo character")
+
+
 def modern_choseong_offset(c: str, /) -> int:
     """Returns the Choseong offset of a modern Hangul Jamo character.
 
@@ -149,6 +173,18 @@ def modern_jongseong_offset(c: str, /) -> int:
     if MODERN_JONGSEONG_BASE <= code <= MODERN_JONGSEONG_END:
         return code - MODERN_JONGSEONG_BASE + 1
     raise ValueError("expected a modern Hangul Jamo Jongseong character")
+
+
+def compat_jamo_offset(c: str, /) -> int:
+    """Returns the offset of a Hangul Compatibility Jamo character.
+
+    Raises:
+        ValueError: If the given character is not a Hangul Compatibility Jamo.
+    """
+    code = ord(c)
+    if COMPAT_JAMO_BASE <= code <= COMPAT_JAMO_END:
+        return code - COMPAT_JAMO_BASE
+    raise ValueError("expected a Hangul Compatibility Jamo character")
 
 
 def modern_compat_jaum_offset(c: str, /) -> int:
