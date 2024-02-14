@@ -4,11 +4,6 @@ from . import offset
 
 __all__ = ["compose", "decompose"]
 
-# FEAT: `*_END - *_START + 1` -> `*_COUNT` -> `*_COEF`
-CHOSEONG_COEF = 21 * 28
-JUNGSEONG_COEF = 28
-JONGSEONG_COEF = 1
-
 
 def compose(cho: str, jung: str, jong: str | None) -> str:
     """Composes Choseong, Jungseong, and an optional Jongseong into a Syllable.
@@ -17,8 +12,8 @@ def compose(cho: str, jung: str, jong: str | None) -> str:
         ValueError: If the characters are not appropriate Hangul Jamos.
     """
     return chr(
-        offset.modern_choseong_offset(cho) * CHOSEONG_COEF
-        + offset.modern_jongseong_offset(jung) * JUNGSEONG_COEF
+        offset.modern_choseong_offset(cho) * offset.CHOSEONG_COEF
+        + offset.modern_jongseong_offset(jung) * offset.JUNGSEONG_COEF
         + (offset.modern_jongseong_offset(jong) if jong else 0)
         + offset.SYLLABLE_BASE
     )
