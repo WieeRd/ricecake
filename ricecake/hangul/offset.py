@@ -112,10 +112,10 @@ def is_hangul(c: str, /) -> bool:
 
 
 def syllable_offset(c: str, /) -> int:
-    """Returns the offset of a Hangul Syllable character.
+    """Calculates the offset of a Hangul Syllable character.
 
     Raises:
-        ValueError: If the given character is not a Hangul Syllable.
+        ValueError: If the character is not a Hangul Syllable.
     """
     code = ord(c)
     if SYLLABLE_BASE <= code <= SYLLABLE_BASE:
@@ -124,10 +124,10 @@ def syllable_offset(c: str, /) -> int:
 
 
 def jamo_offset(c: str, /) -> int:
-    """Returns the offset of a Hangul Jamo character.
+    """Calculates the offset of a Hangul Jamo character.
 
     Raises:
-        ValueError: If the given character is not a Hangul Jamo.
+        ValueError: If the character is not a Hangul Jamo.
     """
     code = ord(c)
     if JAMO_BASE <= code <= JAMO_END:
@@ -136,10 +136,10 @@ def jamo_offset(c: str, /) -> int:
 
 
 def modern_choseong_offset(c: str, /) -> int:
-    """Returns the Choseong offset of a modern Hangul Jamo character.
+    """Calculates the Choseong offset of a modern Hangul Jamo character.
 
     Raises:
-        ValueError: If the given character is not a modern Hangul Jamo Choseong.
+        ValueError: If the character is not a modern Hangul Jamo Choseong.
     """
     code = ord(c)
     if MODERN_CHOSEONG_BASE <= code <= MODERN_CHOSEONG_END:
@@ -148,10 +148,10 @@ def modern_choseong_offset(c: str, /) -> int:
 
 
 def modern_jungseong_offset(c: str, /) -> int:
-    """Returns the Jungseong offset of a modern Hangul Jamo character.
+    """Calculates the Jungseong offset of a modern Hangul Jamo character.
 
     Raises:
-        ValueError: If the given character is not a modern Hangul Jamo Jungseong.
+        ValueError: If the character is not a modern Hangul Jamo Jungseong.
     """
     code = ord(c)
     if MODERN_JUNGSEONG_BASE <= code <= MODERN_JUNGSEONG_END:
@@ -160,26 +160,27 @@ def modern_jungseong_offset(c: str, /) -> int:
 
 
 def modern_jongseong_offset(c: str, /) -> int:
-    """Returns the Jungseong offset of a modern Hangul Jamo character.
+    """Calculates the Jungseong offset of a modern Hangul Jamo character.
 
     Note that unlike Choseong and Jungseong, Jongseong offset starts from 1.
     This is because offset 0 is used to denote the lack of Jongseong
     when composing a Hangul Syllable from Jamo offsets and vice versa.
 
     Raises:
-        ValueError: If the given character is not a modern Hangul Jamo Jongseong.
+        ValueError: If the character is not a modern Hangul Jamo Jongseong.
     """
     code = ord(c)
     if MODERN_JONGSEONG_BASE <= code <= MODERN_JONGSEONG_END:
+        # FIX: should this +1 happen in `compose()` or here?
         return code - MODERN_JONGSEONG_BASE + 1
     raise ValueError("expected a modern Hangul Jamo Jongseong character")
 
 
 def compat_jamo_offset(c: str, /) -> int:
-    """Returns the offset of a Hangul Compatibility Jamo character.
+    """Calculates the offset of a Hangul Compatibility Jamo character.
 
     Raises:
-        ValueError: If the given character is not a Hangul Compatibility Jamo.
+        ValueError: If the character is not a Hangul Compatibility Jamo.
     """
     code = ord(c)
     if COMPAT_JAMO_BASE <= code <= COMPAT_JAMO_END:
@@ -188,10 +189,10 @@ def compat_jamo_offset(c: str, /) -> int:
 
 
 def modern_compat_jaum_offset(c: str, /) -> int:
-    """Returns the Jaum offset of a modern Hangul Compatibility Jamo character.
+    """Calculates the Jaum offset of a modern Hangul Compatibility Jamo character.
 
     Raises:
-        ValueError: If the given character is not a modern Hangul Compatibility Jamo Jaum.
+        ValueError: If the character is not a modern Hangul Compatibility Jamo Jaum.
     """
     code = ord(c)
     if MODERN_COMPAT_JAUM_BASE <= code <= MODERN_COMPAT_JAUM_END:
@@ -200,10 +201,10 @@ def modern_compat_jaum_offset(c: str, /) -> int:
 
 
 def modern_compat_moum_offset(c: str, /) -> int:
-    """Returns the Moum offset of a modern Hangul Compatibility Jamo character.
+    """Calculates the Moum offset of a modern Hangul Compatibility Jamo character.
 
     Raises:
-        ValueError: If the given character is not a modern Hangul Compatibility Jamo Moum.
+        ValueError: If the character is not a modern Hangul Compatibility Jamo Moum.
     """
     code = ord(c)
     if MODERN_COMPAT_MOUM_BASE <= code <= MODERN_COMPAT_MOUM_END:
