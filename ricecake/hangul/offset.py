@@ -9,10 +9,6 @@
 SYLLABLE_BASE = 0xAC00  # '가'
 SYLLABLE_END = 0xD7A3  # '힣'
 
-CHOSEONG_COEF = 588
-JUNGSEONG_COEF = 28
-JONGSEONG_COEF = 1
-
 
 # https://en.wikipedia.org/wiki/Hangul_Jamo_(Unicode_block)
 JAMO_BASE = 0x1100  # 'ᄀ'

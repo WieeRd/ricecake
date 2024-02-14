@@ -1,9 +1,27 @@
 """(De)composition of Hangul Jamo and Syllable."""
 
+from . import offset
+
+__all__ = ["compose", "decompose"]
+
+# FEAT: `*_END - *_START + 1` -> `*_COUNT` -> `*_COEF`
+CHOSEONG_COEF = 21 * 28
+JUNGSEONG_COEF = 28
+JONGSEONG_COEF = 1
+
 
 def compose(cho: str, jung: str, jong: str | None) -> str:
-    """Composes Choseong, Jungseong, and Jongseong into a Syllable."""
-    raise NotImplementedError
+    """Composes Choseong, Jungseong, and an optional Jongseong into a Syllable.
+
+    Raises:
+        ValueError: If the characters are not appropriate Hangul Jamos.
+    """
+    return chr(
+        offset.modern_choseong_offset(cho) * CHOSEONG_COEF
+        + offset.modern_jongseong_offset(jung) * JUNGSEONG_COEF
+        + (offset.modern_jongseong_offset(jong) if jong else 0)
+        + offset.SYLLABLE_BASE
+    )
 
 
 def decompose(syl: str) -> tuple[str, str, str | None]:
