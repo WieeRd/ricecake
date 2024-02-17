@@ -16,9 +16,9 @@ def compose(cho: str, jung: str, jong: str | None) -> str:
         ValueError: If the characters are not appropriate Hangul Jamos.
     """
     return chr(
-        o.modern_choseong_offset(cho) * o.CHOSEONG_COEF
-        + o.modern_jongseong_offset(jung) * o.JUNGSEONG_COEF
-        + (o.modern_jongseong_offset(jong) if jong else 0)
+        o.choseong_offset(cho) * o.CHOSEONG_COEF
+        + o.jongseong_offset(jung) * o.JUNGSEONG_COEF
+        + (o.jongseong_offset(jong) if jong else 0)
         + o.SYLLABLE_BASE
     )
 

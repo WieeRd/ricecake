@@ -140,7 +140,7 @@ def jamo_offset(c: str, /) -> int:
     raise ValueError("expected a Hangul Jamo character")
 
 
-def modern_choseong_offset(c: str, /) -> int:
+def choseong_offset(c: str, /) -> int:
     """Calculates the Choseong offset of a modern Hangul Jamo character.
 
     Raises:
@@ -152,7 +152,7 @@ def modern_choseong_offset(c: str, /) -> int:
     raise ValueError("expected a modern Hangul Jamo Choseong character")
 
 
-def modern_jungseong_offset(c: str, /) -> int:
+def jungseong_offset(c: str, /) -> int:
     """Calculates the Jungseong offset of a modern Hangul Jamo character.
 
     Raises:
@@ -164,7 +164,7 @@ def modern_jungseong_offset(c: str, /) -> int:
     raise ValueError("expected a modern Hangul Jamo Jungseong character")
 
 
-def modern_jongseong_offset(c: str, /) -> int:
+def jongseong_offset(c: str, /) -> int:
     """Calculates the Jungseong offset of a modern Hangul Jamo character.
 
     Note that unlike Choseong and Jungseong, Jongseong offset starts from 1.
@@ -193,7 +193,7 @@ def compat_jamo_offset(c: str, /) -> int:
     raise ValueError("expected a Hangul Compatibility Jamo character")
 
 
-def modern_compat_jaum_offset(c: str, /) -> int:
+def compat_jaum_offset(c: str, /) -> int:
     """Calculates the Jaum offset of a modern Hangul Compatibility Jamo character.
 
     Raises:
@@ -205,7 +205,7 @@ def modern_compat_jaum_offset(c: str, /) -> int:
     raise ValueError("expected a modern Hangul Compatibility Jamo Jaum character")
 
 
-def modern_compat_moum_offset(c: str, /) -> int:
+def compat_moum_offset(c: str, /) -> int:
     """Calculates the Moum offset of a modern Hangul Compatibility Jamo character.
 
     Raises:

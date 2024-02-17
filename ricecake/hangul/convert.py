@@ -11,7 +11,7 @@ from ._lookup import (
 )
 
 __all__ = [
-    "modern_jamo_to_compat_jamo",
+    "jamo_to_compat_jamo",
     "compat_jaum_to_choseong",
     "compat_moum_to_jungseong",
     "compat_jaum_to_jongseong",
@@ -23,22 +23,22 @@ __all__ = [
 # | - [ ] add `classify_jamo() -> tuple[JamoKind, int]`
 # | - [ ] `jamo_to_compat_jamo() -> str | None`
 # | - [x] RIIR & PyO3
-def modern_jamo_to_compat_jamo(c: str, /) -> str:
+def jamo_to_compat_jamo(c: str, /) -> str:
     """Converts a Hangul Jamo character to a Compatibility Jamo character.
 
     Raises:
         ValueError: If the character is not a Hangul Jamo.
     """
     with suppress(ValueError):
-        i = offset.modern_choseong_offset(c)
+        i = offset.choseong_offset(c)
         return CHOSEONG_TO_COMPAT_JAUM[i]
 
     with suppress(ValueError):
-        i = offset.modern_jungseong_offset(c)
+        i = offset.jungseong_offset(c)
         return chr(i + offset.MODERN_COMPAT_MOUM_BASE)
 
     with suppress(ValueError):
-        i = offset.modern_jongseong_offset(c)
+        i = offset.jongseong_offset(c)
         return JONGSEONG_TO_COMPAT_JAUM[i - 1]
 
     raise ValueError("expected a modern Hangul Jamo character")
@@ -52,7 +52,7 @@ def compat_jaum_to_choseong(c: str, /) -> str | None:
     Raises:
         ValueError: If the character is not a Hangul Compatibility Jamo Jaum.
     """
-    i = offset.modern_compat_jaum_offset(c)
+    i = offset.compat_jaum_offset(c)
     return COMPAT_JAUM_TO_CHOSEONG[i]
 
 
@@ -62,7 +62,7 @@ def compat_moum_to_jungseong(c: str, /) -> str:
     Raises:
         ValueError: If the character is not a Hangul Compatibility Jamo Moum.
     """
-    i = offset.modern_compat_moum_offset(c)
+    i = offset.compat_moum_offset(c)
     return chr(i + offset.MODERN_JUNGSEONG_BASE)
 
 
@@ -72,5 +72,5 @@ def compat_jaum_to_jongseong(c: str, /) -> str:
     Raises:
         ValueError: If the character is not a Hangul Compatibility Jamo Jaum.
     """
-    i = offset.modern_compat_jaum_offset(c)
+    i = offset.compat_jaum_offset(c)
     return COMPAT_JAUM_TO_JONGSEONG[i]
