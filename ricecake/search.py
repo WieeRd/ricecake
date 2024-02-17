@@ -3,7 +3,7 @@
 import re
 from collections.abc import Iterator
 
-from . import hangul as hg
+from . import offset as o
 
 # fmt: off
 _COMPAT_JAMO_CHOSEONG_PATTERN = [
@@ -63,25 +63,25 @@ def search_pattern(
         code = ord(c)
 
         # FEAT: LATER: composite jamo completion e.g. "우" -> "위", "일" -> "읽"
-        if jongseong_completion and hg.is_syllable(c):
+        if jongseong_completion and o.is_syllable(c):
             # checks if the syllable is missing a jongseong
             # if so, yield a pattern that matches any jongseong
             # e.g. "슈" -> "[슈-슣]" / "슉" -> "슉"
-            if (code - hg.SYLLABLE_BASE) % hg.JUNGSEONG_COEF == 0:
-                yield f"[{c}-{chr(code + hg.JUNGSEONG_COEF - 1)}]"
+            if (code - o.SYLLABLE_BASE) % o.JUNGSEONG_COEF == 0:
+                yield f"[{c}-{chr(code + o.JUNGSEONG_COEF - 1)}]"
 
         elif (
             choseong_search
-            and hg.MODERN_COMPAT_JAUM_BASE <= code <= hg.MODERN_COMPAT_JAUM_END
+            and o.MODERN_COMPAT_JAUM_BASE <= code <= o.MODERN_COMPAT_JAUM_END
         ):
             # compat jamo cannot be 1:1 mapped to jamo or syllable using algorithm
             # because jamo separates jongseong-only jaums while compat jamo does not
             # instead, consult the lookup table and yield a pattern that matches
             # choseong itself, or any syllable that starts with the choseong
-            offset = ord(c) - hg.MODERN_COMPAT_JAUM_BASE
+            offset = ord(c) - o.MODERN_COMPAT_JAUM_BASE
             yield _COMPAT_JAMO_CHOSEONG_PATTERN[offset] or c
 
-        elif hg.is_jamo(c):
+        elif o.is_jamo(c):
             # FEAT: preprocess text with `re.escape()` and `unicodedata.normalize("NFC", ...)`
             # | should this be the caller's responsibility or this function's?
             raise ValueError("Hangul Jamo and NFD-normalized string are not supported")

@@ -6,4 +6,7 @@
 :license: MIT, see LICENSE for more details.
 """
 
+from .compose import *
+from .convert import *
+from .offset import *
 from .search import *

@@ -2,7 +2,7 @@
 
 from contextlib import suppress
 
-from . import offset
+from . import offset as o
 from ._lookup import (
     CHOSEONG_TO_COMPAT_JAUM,
     COMPAT_JAUM_TO_CHOSEONG,
@@ -30,15 +30,15 @@ def jamo_to_compat_jamo(c: str, /) -> str:
         ValueError: If the character is not a Hangul Jamo.
     """
     with suppress(ValueError):
-        i = offset.choseong_offset(c)
+        i = o.choseong_offset(c)
         return CHOSEONG_TO_COMPAT_JAUM[i]
 
     with suppress(ValueError):
-        i = offset.jungseong_offset(c)
-        return chr(i + offset.MODERN_COMPAT_MOUM_BASE)
+        i = o.jungseong_offset(c)
+        return chr(i + o.MODERN_COMPAT_MOUM_BASE)
 
     with suppress(ValueError):
-        i = offset.jongseong_offset(c)
+        i = o.jongseong_offset(c)
         return JONGSEONG_TO_COMPAT_JAUM[i - 1]
 
     raise ValueError("expected a modern Hangul Jamo character")
@@ -52,7 +52,7 @@ def compat_jaum_to_choseong(c: str, /) -> str | None:
     Raises:
         ValueError: If the character is not a Hangul Compatibility Jamo Jaum.
     """
-    i = offset.compat_jaum_offset(c)
+    i = o.compat_jaum_offset(c)
     return COMPAT_JAUM_TO_CHOSEONG[i]
 
 
@@ -62,8 +62,8 @@ def compat_moum_to_jungseong(c: str, /) -> str:
     Raises:
         ValueError: If the character is not a Hangul Compatibility Jamo Moum.
     """
-    i = offset.compat_moum_offset(c)
-    return chr(i + offset.MODERN_JUNGSEONG_BASE)
+    i = o.compat_moum_offset(c)
+    return chr(i + o.MODERN_JUNGSEONG_BASE)
 
 
 def compat_jaum_to_jongseong(c: str, /) -> str:
@@ -72,5 +72,5 @@ def compat_jaum_to_jongseong(c: str, /) -> str:
     Raises:
         ValueError: If the character is not a Hangul Compatibility Jamo Jaum.
     """
-    i = offset.compat_jaum_offset(c)
+    i = o.compat_jaum_offset(c)
     return COMPAT_JAUM_TO_JONGSEONG[i]
