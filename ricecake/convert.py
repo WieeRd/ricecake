@@ -11,10 +11,10 @@ from ._lookup import (
 )
 
 __all__ = [
-    "jamo_to_compat_jamo",
-    "compat_jaum_to_choseong",
-    "compat_moum_to_jungseong",
-    "compat_jaum_to_jongseong",
+    "to_compat_jamo",
+    "to_choseong",
+    "to_jungseong",
+    "to_jongseong",
 ]
 
 
@@ -23,7 +23,7 @@ __all__ = [
 # | - [ ] add `classify_jamo() -> tuple[JamoKind, int]`
 # | - [ ] `jamo_to_compat_jamo() -> str | None`
 # | - [x] RIIR & PyO3
-def jamo_to_compat_jamo(jamo: str) -> str:
+def to_compat_jamo(jamo: str) -> str:
     """Converts a Hangul Jamo character to a Compatibility Jamo character.
 
     Raises:
@@ -44,7 +44,7 @@ def jamo_to_compat_jamo(jamo: str) -> str:
     raise ValueError("expected a modern Hangul Jamo character")
 
 
-def compat_jaum_to_choseong(compat_jaum: str) -> str | None:
+def to_choseong(compat_jaum: str) -> str | None:
     """Converts a Hangul Compatibility Jaum character to a Jamo Choseong character.
 
     Returns `None` if there is no corresponding Jamo Choseong character.
@@ -56,7 +56,7 @@ def compat_jaum_to_choseong(compat_jaum: str) -> str | None:
     return COMPAT_JAUM_TO_CHOSEONG[i]
 
 
-def compat_moum_to_jungseong(compat_moum: str) -> str:
+def to_jungseong(compat_moum: str) -> str:
     """Converts a Hangul Compatibility Moum character to a Jamo Jungseong character.
 
     Raises:
@@ -66,7 +66,7 @@ def compat_moum_to_jungseong(compat_moum: str) -> str:
     return chr(i + o.MODERN_JUNGSEONG_BASE)
 
 
-def compat_jaum_to_jongseong(compat_jaum: str) -> str:
+def to_jongseong(compat_jaum: str) -> str:
     """Converts a Hangul Compatibility Jaum character to a Jamo Jongseong character.
 
     Raises:
