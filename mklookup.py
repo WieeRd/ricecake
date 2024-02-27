@@ -51,7 +51,7 @@ def decompose_jongseong(jongseong: str, /) -> tuple[str, str] | None:
 # FEAT: generate composite moum completion lookup table
 
 if __name__ == "__main__":
-    import ricecake.hangul as hg
+    import ricecake.offset as o
 
     T = TypeVar("T")
 
@@ -60,24 +60,24 @@ if __name__ == "__main__":
 
     CHOSEONG_TO_COMPAT_JAUM = mklookup(
         jamo_to_compat_jamo,
-        hg.MODERN_CHOSEONG_BASE,
-        hg.MODERN_CHOSEONG_END,
+        o.MODERN_CHOSEONG_BASE,
+        o.MODERN_CHOSEONG_END,
     )
     JONGSEONG_TO_COMPAT_JAUM = mklookup(
         jamo_to_compat_jamo,
-        hg.MODERN_JONGSEONG_BASE,
-        hg.MODERN_JONGSEONG_END,
+        o.MODERN_JONGSEONG_BASE,
+        o.MODERN_JONGSEONG_END,
     )
 
     COMPAT_JAUM_TO_CHOSEONG = mklookup(
         compat_jaum_to_choseong,
-        hg.MODERN_COMPAT_JAUM_BASE,
-        hg.MODERN_COMPAT_JAUM_END,
+        o.MODERN_COMPAT_JAUM_BASE,
+        o.MODERN_COMPAT_JAUM_END,
     )
     COMPAT_JAUM_TO_JONGSEONG = mklookup(
         compat_jaum_to_jongseong,
-        hg.MODERN_COMPAT_JAUM_BASE,
-        hg.MODERN_COMPAT_JAUM_END,
+        o.MODERN_COMPAT_JAUM_BASE,
+        o.MODERN_COMPAT_JAUM_END,
     )
 
     print(f"CHOSEONG_TO_COMPAT_JAUM = {CHOSEONG_TO_COMPAT_JAUM}\n")
