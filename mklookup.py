@@ -1,4 +1,4 @@
-"""Jamo <-> Compatibility Jamo conversions."""
+#!/usr/bin/env python
 
 import unicodedata as ud
 from collections.abc import Callable
