@@ -23,13 +23,13 @@ def compose(cho: str, jung: str, jong: str | None) -> str:
     )
 
 
-def decompose(c: str, /) -> tuple[str, str, str | None]:
+def decompose(syllable: str) -> tuple[str, str, str | None]:
     """Decomposes a Syllable into Choseong, Jungseong, and an optional Jongseong.
 
     Raises:
         ValueError: If the character is not a Hangul Syllable.
     """
-    syl = o.syllable_offset(c)
+    syl = o.syllable_offset(syllable)
 
     cho = syl // o.CHOSEONG_COEF
     jung = syl % (o.CHOSEONG_COEF) // o.JUNGSEONG_COEF

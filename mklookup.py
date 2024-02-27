@@ -5,7 +5,7 @@ from collections.abc import Callable
 from typing import TypeVar
 
 
-def jamo_to_compat_jamo(jamo: str, /) -> str | None:
+def jamo_to_compat_jamo(jamo: str) -> str | None:
     name = ud.name(jamo).split(" ")[-1]  # HANGUL CHOSEONG "KIYEOK"
     try:
         return ud.lookup(f"HANGUL LETTER {name}")
@@ -13,7 +13,7 @@ def jamo_to_compat_jamo(jamo: str, /) -> str | None:
         return None
 
 
-def compat_jaum_to_choseong(compat_jaum: str, /) -> str | None:
+def compat_jaum_to_choseong(compat_jaum: str) -> str | None:
     name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
     try:
         return ud.lookup(f"HANGUL CHOSEONG {name}")
@@ -21,12 +21,12 @@ def compat_jaum_to_choseong(compat_jaum: str, /) -> str | None:
         return None
 
 
-def compat_jaum_to_jongseong(compat_jaum: str, /) -> str:
+def compat_jaum_to_jongseong(compat_jaum: str) -> str:
     name = ud.name(compat_jaum).split(" ")[-1]  # HANGUL LETTER "KIYEOK"
     return ud.lookup(f"HANGUL JONGSEONG {name}")
 
 
-def decompose_jongseong(jongseong: str, /) -> tuple[str, str] | None:
+def decompose_jongseong(jongseong: str) -> tuple[str, str] | None:
     name = ud.name(jongseong).split(" ")[-1]  # HANGUL JONGSEONG "KIYEOK"
 
     # SSANG{jaum} e.g. SSANGKIYEOK
