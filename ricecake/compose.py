@@ -32,7 +32,7 @@ def decompose(syllable: str) -> tuple[str, str, str | None]:
     syl = o.syllable_offset(syllable)
 
     cho = syl // o.CHOSEONG_COEF
-    jung = syl % (o.CHOSEONG_COEF) // o.JUNGSEONG_COEF
+    jung = syl % o.CHOSEONG_COEF // o.JUNGSEONG_COEF
     jong = syl % o.JUNGSEONG_COEF
 
     return (
@@ -40,6 +40,36 @@ def decompose(syllable: str) -> tuple[str, str, str | None]:
         chr(jung + o.MODERN_JUNGSEONG_BASE),
         chr(jong + o.MODERN_JONGSEONG_BASE - 1) if jong else None,
     )
+
+
+def get_choseong(syllable: str) -> str:
+    """Extracts Choseong from a Syllable.
+
+    Raises:
+        ValueError: If the character is not a Hangul Syllable.
+    """
+    cho = o.syllable_offset(syllable) // o.CHOSEONG_COEF
+    return chr(cho + o.MODERN_CHOSEONG_BASE)
+
+
+def get_jungseong(syllable: str) -> str:
+    """Extracts Jungseong from a Syllable.
+
+    Raises:
+        ValueError: If the character is not a Hangul Syllable.
+    """
+    jung = o.syllable_offset(syllable) % o.CHOSEONG_COEF // o.JUNGSEONG_COEF
+    return chr(jung + o.MODERN_JUNGSEONG_BASE)
+
+
+def get_jongseong(syllable: str) -> str | None:
+    """Extracts Jongseong from a Syllable, if there is one.
+
+    Raises:
+        ValueError: If the character is not a Hangul Syllable.
+    """
+    jong = o.syllable_offset(syllable) % o.JUNGSEONG_COEF
+    return chr(jong + o.MODERN_JONGSEONG_BASE - 1) if jong else None
 
 
 # FEAT: decompose composite Jaum and Moum into tuple of str
