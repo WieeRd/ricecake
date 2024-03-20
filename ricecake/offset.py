@@ -99,6 +99,16 @@ def is_compat_jamo(c: str, /) -> bool:
     return COMPAT_JAMO_BASE <= ord(c) <= COMPAT_JAMO_END
 
 
+def is_compat_jaum(c: str, /) -> bool:
+    """Checks if a character is a modern Hangul Compatibility Jamo Jaum."""
+    return MODERN_COMPAT_JAUM_BASE <= ord(c) <= MODERN_COMPAT_JAUM_END
+
+
+def is_compat_moum(c: str, /) -> bool:
+    """Checks if a character is a modern Hangul Compatibility Jamo Moum."""
+    return MODERN_COMPAT_MOUM_BASE <= ord(c) <= MODERN_COMPAT_MOUM_END
+
+
 def is_hangul(c: str, /) -> bool:
     """Checks if a character is a Hangul character.
 
