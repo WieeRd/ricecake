@@ -2,7 +2,45 @@
 
 from . import offset as o
 
-__all__ = ["compose", "decompose"]
+__all__ = [
+    "compose",
+    "decompose",
+    "get_choseong",
+    "get_jungseong",
+    "get_jongseong",
+    "decompose_jongseong",
+]
+
+
+DECOMPOSE_JONGSEONG = [
+    ("ᆨ", None),
+    ("ᆨ", "ᆨ"),
+    ("ᆨ", "ᆺ"),
+    ("ᆫ", None),
+    ("ᆫ", "ᆽ"),
+    ("ᆫ", "ᇂ"),
+    ("ᆮ", None),
+    ("ᆯ", None),
+    ("ᆯ", "ᆨ"),
+    ("ᆯ", "ᆷ"),
+    ("ᆯ", "ᆸ"),
+    ("ᆯ", "ᆺ"),
+    ("ᆯ", "ᇀ"),
+    ("ᆯ", "ᇁ"),
+    ("ᆯ", "ᇂ"),
+    ("ᆷ", None),
+    ("ᆸ", None),
+    ("ᆸ", "ᆺ"),
+    ("ᆺ", None),
+    ("ᆺ", "ᆺ"),
+    ("ᆼ", None),
+    ("ᆽ", None),
+    ("ᆾ", None),
+    ("ᆿ", None),
+    ("ᇀ", None),
+    ("ᇁ", None),
+    ("ᇂ", None),
+]
 
 
 # FEAT: LATER: compose syllable compat jamo
@@ -70,6 +108,17 @@ def get_jongseong(syllable: str) -> str | None:
     """
     jong = o.syllable_offset(syllable) % o.JUNGSEONG_COEF
     return chr(jong + o.MODERN_JONGSEONG_BASE - 1) if jong else None
+
+
+def decompose_jongseong(jongseong: str) -> tuple[str, str | None]:
+    """Decomposes a composite Jongseong into tuple of 2 Jongseong characters.
+
+    Non-composite Jongseongs are returned as `(itself, None)`.
+
+    Raises:
+        ValueError: If the character is not a Hangul Jamo Jongseong.
+    """
+    return DECOMPOSE_JONGSEONG[o.jongseong_offset(jongseong)]
 
 
 # FEAT: decompose composite Jaum and Moum into tuple of str

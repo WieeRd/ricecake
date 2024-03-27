@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 
+"""Generates various lookup tables with the help of `unicodedata` module.
+
+- Conversions between Jamo and Compatibility Jamo.
+- Decomposing composite Jaums and Moums.
+"""
+
 import unicodedata as ud
 from collections.abc import Callable
 from typing import TypeVar
@@ -26,7 +32,7 @@ def compat_jaum_to_jongseong(compat_jaum: str) -> str:
     return ud.lookup(f"HANGUL JONGSEONG {name}")
 
 
-def decompose_jongseong(jongseong: str) -> tuple[str, str] | None:
+def decompose_jongseong(jongseong: str) -> tuple[str, str | None]:
     name = ud.name(jongseong).split(" ")[-1]  # HANGUL JONGSEONG "KIYEOK"
 
     # SSANG{jaum} e.g. SSANGKIYEOK
@@ -44,7 +50,7 @@ def decompose_jongseong(jongseong: str) -> tuple[str, str] | None:
         char2 = ud.lookup(f"HANGUL JONGSEONG {second}")
         return char1, char2
 
-    return None
+    return jongseong, None
 
 
 # FEAT: compat jaum to choseong pattern ("ㄱ" -> "[ㄱ가-깋]")
@@ -80,7 +86,14 @@ if __name__ == "__main__":
         o.MODERN_COMPAT_JAUM_END,
     )
 
+    DECOMPOSE_JONGSEONG = mklookup(
+        decompose_jongseong,
+        o.MODERN_JONGSEONG_BASE,
+        o.MODERN_JONGSEONG_END,
+    )
+
     print(f"CHOSEONG_TO_COMPAT_JAUM = {CHOSEONG_TO_COMPAT_JAUM}\n")
     print(f"JONGSEONG_TO_COMPAT_JAUM = {JONGSEONG_TO_COMPAT_JAUM}\n")
     print(f"COMPAT_JAUM_TO_CHOSEONG = {COMPAT_JAUM_TO_CHOSEONG}\n")
     print(f"COMPAT_JAUM_TO_JONGSEONG = {COMPAT_JAUM_TO_JONGSEONG}\n")
+    print(f"DECOMPOSE_JONGSEONG = {DECOMPOSE_JONGSEONG}\n")
