@@ -133,7 +133,7 @@ def syllable_offset(c: str, /) -> int:
         ValueError: If the character is not a Hangul Syllable.
     """
     code = ord(c)
-    if SYLLABLE_BASE <= code <= SYLLABLE_BASE:
+    if SYLLABLE_BASE <= code <= SYLLABLE_END:
         return code - SYLLABLE_BASE
     raise ValueError("expected a Hangul Syllable character")
 

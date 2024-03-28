@@ -135,7 +135,7 @@ def set_jungseong(syllable: str, jungseong: str) -> str:
             - If `jungseong` is not a Hangul Jamo Jungseong.
     """
     syl = o.syllable_offset(syllable)
-    new_jung = o.choseong_offset(jungseong)
+    new_jung = o.jungseong_offset(jungseong)
     old_jung = syl % o.CHOSEONG_COEF // o.JUNGSEONG_COEF
     return chr(syl + (new_jung - old_jung) * o.JUNGSEONG_COEF + o.SYLLABLE_BASE)
 
@@ -149,8 +149,8 @@ def set_jongseong(syllable: str, jongseong: str | None) -> str:
             - If `jongseong` is not a Hangul Jamo Jongseong.
     """
     syl = o.syllable_offset(syllable)
-    jong = o.choseong_offset(jongseong) if jongseong else 0
-    return chr(syl - syl % o.JONGSEONG_COUNT + jong)
+    jong = o.jongseong_offset(jongseong) if jongseong else 0
+    return chr(syl - syl % o.JONGSEONG_COUNT + jong + o.SYLLABLE_BASE)
 
 
 def decompose_jongseong(jongseong: str) -> tuple[str, str | None]:
