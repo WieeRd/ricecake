@@ -8,6 +8,9 @@ __all__ = [
     "get_choseong",
     "get_jungseong",
     "get_jongseong",
+    "set_choseong",
+    "set_jungseong",
+    "set_jongseong",
     "decompose_jongseong",
 ]
 
@@ -108,6 +111,46 @@ def get_jongseong(syllable: str) -> str | None:
     """
     jong = o.syllable_offset(syllable) % o.JUNGSEONG_COEF
     return chr(jong + o.MODERN_JONGSEONG_BASE - 1) if jong else None
+
+
+def set_choseong(syllable: str, choseong: str) -> str:
+    """Replaces the Choseong of the given Syllable.
+
+    Raises:
+        ValueError:
+            - If `syllable` is not a Hangul Syllable.
+            - If `choseong` is not a Hangul Jamo Choseong.
+    """
+    syl = o.syllable_offset(syllable)
+    cho = o.choseong_offset(choseong)
+    return chr(cho * o.CHOSEONG_COEF + syl % o.CHOSEONG_COEF + o.SYLLABLE_BASE)
+
+
+def set_jungseong(syllable: str, jungseong: str) -> str:
+    """Replaces the Jungseong of the given Syllable.
+
+    Raises:
+        ValueError:
+            - If `syllable` is not a Hangul Syllable.
+            - If `jungseong` is not a Hangul Jamo Jungseong.
+    """
+    syl = o.syllable_offset(syllable)
+    new_jung = o.choseong_offset(jungseong)
+    old_jung = syl % o.CHOSEONG_COEF // o.JUNGSEONG_COEF
+    return chr(syl + (new_jung - old_jung) * o.JUNGSEONG_COEF + o.SYLLABLE_BASE)
+
+
+def set_jongseong(syllable: str, jongseong: str | None) -> str:
+    """Replaces the Jongseong of the given Syllable.
+
+    Raises:
+        ValueError:
+            - If `syllable` is not a Hangul Syllable.
+            - If `jongseong` is not a Hangul Jamo Jongseong.
+    """
+    syl = o.syllable_offset(syllable)
+    jong = o.choseong_offset(jongseong) if jongseong else 0
+    return chr(syl - syl % o.JONGSEONG_COUNT + jong)
 
 
 def decompose_jongseong(jongseong: str) -> tuple[str, str | None]:
