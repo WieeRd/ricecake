@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from .compose import get_jongseong
+from .compose import get_jongseong, decompose_jongseong
 from .offset import JONGSEONG_COUNT, compat_jaum_offset, is_compat_jaum, is_syllable
 
 __all__ = ["Searcher"]
@@ -42,8 +42,41 @@ CHOSEONG_SEARCH_PATTERN = [
 ]
 
 
+def incremental_pattern(c: str, /) -> str:
+    # 1. Jaum
+    # "ㄱ" -> "[ㄱ가-깋]"
+    if is_compat_jaum(c):
+        return CHOSEONG_SEARCH_PATTERN[compat_jaum_offset(c)] or c
+
+    # 2. Syllable
+    if not is_syllable(c):
+        return c
+
+    # 2.1. Has Jongseong
+    if jong := get_jongseong(c):
+        _first, second = decompose_jongseong(jong)
+
+        # 2.1.1. Single Jongseong
+        # "일" -> "([일-잃]|이[ㄹ라-맇])"
+        if second is None:
+            raise NotImplementedError
+
+        # 2.1.2. Composite Jongseong
+        # "읽" -> "(읽|일[ㄱ가-깋])"
+        raise NotImplementedError
+
+    # 2.2. No Jongseong
+
+    # 2.2.1. Composable Moum
+    # "으" -> "[으-읳]"
+
+    # 2.2.2. Complete Moum
+    # "왜" -> "[왜-왷]"
+    raise NotImplementedError
+
+
 # DOC: did you know? writing human language is a lot harder than programming language
-# TEST: speaking of docs, I haven't tested anything I coded so far.
+# TEST: ASAP: speaking of docs, I haven't tested anything I coded so far.
 # | I should add example sections with doctests at some point
 # | when is that some point? who knows.
 @dataclass(kw_only=True)
@@ -71,33 +104,3 @@ class Searcher:
             return f"[{c}-{chr(ord(c) + JONGSEONG_COUNT)}]"
 
         return c
-
-    @staticmethod
-    def _incremental_pattern(c: str, /) -> str:
-        # 1. Jaum
-        # "ㄱ" -> "[ㄱ가-깋]"
-        if is_compat_jaum(c):
-            return CHOSEONG_SEARCH_PATTERN[compat_jaum_offset(c)] or c
-
-        # 2. Syllable
-        if not is_syllable(c):
-            return c
-
-        # 2.1. Has Jongseong
-        jong = get_jongseong(c)
-        if jong is not None:
-            # 2.1.1. Single Jongseong
-            # "일" -> "([일-잃]|이[ㄹ라-맇])"
-
-            # 2.1.2. Composite Jongseong
-            # "읽" -> "(읽|일[ㄱ가-깋])"
-            raise NotImplementedError
-
-        # 2.2. No Jongseong
-
-        # 2.2.1. Composable Moum
-        # "으" -> "[으-읳]"
-
-        # 2.2.2. Complete Moum
-        # "왜" -> "[왜-왷]"
-        raise NotImplementedError
