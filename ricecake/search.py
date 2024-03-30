@@ -11,24 +11,24 @@ __all__ = ["Searcher"]
 CHOSEONG_SEARCH_PATTERN = [
     "[ㄱ가-깋]",
     "[ㄲ까-낗]",
-    None,  # ㄳ
+    "ㄳ",
     "[ㄴ나-닣]",
-    None,  # ㄵ
-    None,  # ㄶ
+    "ㄵ",
+    "ㄶ",
     "[ㄷ다-딯]",
     "[ㄸ따-띻]",
     "[ㄹ라-맇]",
-    None,  # ㄺ
-    None,  # ㄻ
-    None,  # ㄼ
-    None,  # ㄽ
-    None,  # ㄾ
-    None,  # ㄿ
-    None,  # ㅀ
+    "ㄺ",
+    "ㄻ",
+    "ㄼ",
+    "ㄽ",
+    "ㄾ",
+    "ㄿ",
+    "ㅀ",
     "[ㅁ마-밓]",
     "[ㅂ바-빟]",
     "[ㅃ빠-삫]",
-    None,  # ㅄ
+    "ㅄ",
     "[ㅅ사-싷]",
     "[ㅆ싸-앃]",
     "[ㅇ아-잏]",
@@ -46,7 +46,7 @@ def incremental_pattern(c: str, /) -> str:
     # 1. Jaum
     # "ㄱ" -> "[ㄱ가-깋]"
     if is_compat_jaum(c):
-        return CHOSEONG_SEARCH_PATTERN[compat_jaum_offset(c)] or c
+        return CHOSEONG_SEARCH_PATTERN[compat_jaum_offset(c)]
 
     # 2. Syllable
     if not is_syllable(c):
@@ -98,7 +98,7 @@ class Searcher:
 
     def _search_pattern(self, c: str, /) -> str:
         if self.choseong_search and is_compat_jaum(c):
-            return CHOSEONG_SEARCH_PATTERN[compat_jaum_offset(c)] or c
+            return CHOSEONG_SEARCH_PATTERN[compat_jaum_offset(c)]
 
         if self.jongseong_completion and is_syllable(c) and get_jongseong(c) is None:
             return f"[{c}-{chr(ord(c) + JONGSEONG_COUNT)}]"
