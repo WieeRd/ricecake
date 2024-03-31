@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from .compose import get_jongseong, decompose_jongseong
+from .compose import decompose_jongseong, get_jongseong
 from .offset import JONGSEONG_COUNT, compat_jaum_offset, is_compat_jaum, is_syllable
 
 __all__ = ["Searcher"]
