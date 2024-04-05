@@ -5,7 +5,7 @@
 groups = ["default", "lint"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:f749c0b9111cea1d7bb9419a6bb30ffdbbda7a45018f001dbfdb2892e3e8e4a0"
+content_hash = "sha256:4c2d21954650ee8ec5004e6793b51cbd6c4e9d42b550ea7d5841ad3abdbae4dd"
 
 [[package]]
 name = "ruff"
