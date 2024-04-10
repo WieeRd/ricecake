@@ -72,7 +72,7 @@ def incremental_pattern(c: str, /) -> str:
 
         # 2.1.1. Composite Jongseong
         # "읽" -> "(?:읽|일[ㄱ가-깋])"
-        if second:
+        if second and first != second:
             jong_removed = set_jongseong(c, first)  # "일"
             cho_search = choseong_pattern(to_compat_jamo(second))  # "[ㄱ가-깋]"
             return f"(?:{c}|{jong_removed}{cho_search})"
