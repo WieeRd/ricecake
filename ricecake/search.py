@@ -134,10 +134,12 @@ class Searcher:
     # FEAT: LATER: sort-by, regex flags, filter, search/match/fullmatch
 
     def _search_pattern(self, c: str, /) -> str:
+        # "ㄱ" -> "[ㄱ가-깋]"
         if self.choseong_search and is_compat_jaum(c):
-            return CHOSEONG_SEARCH_PATTERN[compat_jaum_offset(c)]
+            return choseong_pattern(c)
 
+        # "가" -> "[가-갛]"
         if self.jongseong_completion and is_syllable(c) and get_jongseong(c) is None:
-            return f"[{c}-{chr(ord(c) + JONGSEONG_COUNT)}]"
+            return f"[{c}-{set_jongseong(c, 'ᇂ')}]"
 
         return c
