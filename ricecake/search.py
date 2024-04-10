@@ -2,9 +2,15 @@
 
 from dataclasses import dataclass
 
-from .compose import decompose_jongseong, get_jongseong, get_jungseong, set_jongseong
+from .compose import (
+    compose,
+    decompose,
+    decompose_jongseong,
+    get_jongseong,
+    set_jongseong,
+)
 from .convert import to_compat_jamo
-from .offset import JONGSEONG_COUNT, compat_jaum_offset, is_compat_jaum, is_syllable
+from .offset import compat_jaum_offset, is_compat_jaum, is_syllable
 
 __all__ = ["Searcher"]
 
@@ -58,7 +64,7 @@ def incremental_pattern(c: str, /) -> str:
     # 2. Syllable
     if not is_syllable(c):
         return c
-    _cho, jung, jong = decompose(c)
+    cho, jung, jong = decompose(c)
 
     # 2.1. Has Jongseong
     if jong:
@@ -88,6 +94,7 @@ def incremental_pattern(c: str, /) -> str:
         return f"(?:{jong_completion}|{jong_removed}{cho_search})"
 
     # 2.2. No Jongseong
+    # "으" -> "[으-읳]" / "아" -> "[아-앟]"
 
     # NOTE: Composability is based on Korean keyboard and IME behavior
     # | By definition, `ㅐ = ㅏ + ㅣ` and `ㅢ = ㅡ + ㅣ`.
@@ -96,21 +103,12 @@ def incremental_pattern(c: str, /) -> str:
     # | `ㅢ` on the other hand can only be typed as `ㅡ + ㅣ`.
     # | Thus, `ㅡ` is considered composable while `ㅏ` is not.
 
-    # 2.2.1. Composable Moum
-    # "으" -> "[으-읳]"
-    match jung:
-        case "ᅩ":
-            ...
-        case "ᅮ":
-            ...
-        case "ᅳ":
-            ...
-        case _:
-            ...
-
-    # 2.2.2. Complete Moum
-    # "왜" -> "[왜-왷]"
-    raise NotImplementedError
+    jung_range = {
+        "ᅩ": "ᅬ",
+        "ᅮ": "ᅱ",
+        "ᅳ": "ᅴ",
+    }.get(jung, jung)
+    return f"[{c}-{compose(cho, jung_range, 'ᇂ')}]"
 
 
 # DOC: did you know? writing human language is a lot harder than programming language
