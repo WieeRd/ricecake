@@ -58,9 +58,10 @@ def incremental_pattern(c: str, /) -> str:
     # 2. Syllable
     if not is_syllable(c):
         return c
+    _cho, jung, jong = decompose(c)
 
     # 2.1. Has Jongseong
-    if jong := get_jongseong(c):
+    if jong:
         first, second = decompose_jongseong(jong)
 
         # 2.1.1. Composite Jongseong
@@ -80,13 +81,13 @@ def incremental_pattern(c: str, /) -> str:
             "ᆺ": "ᆻ",
         }.get(jong)
 
-        jong_completion = f"[{c}-{set_jongseong(c, jong_range)}]" if jong_range else c  # [일-잃]
+        # "일" -> "[일-잃]" / "잊" -> "잊"
+        jong_completion = f"[{c}-{set_jongseong(c, jong_range)}]" if jong_range else c
         jong_removed = set_jongseong(c, None)  # "이"
         cho_search = choseong_pattern(to_compat_jamo(jong))  # "[ㄹ라-맇]"
         return f"(?:{jong_completion}|{jong_removed}{cho_search})"
 
     # 2.2. No Jongseong
-    jung = get_jungseong(c)
 
     # NOTE: Composability is based on Korean keyboard and IME behavior
     # | By definition, `ㅐ = ㅏ + ㅣ` and `ㅢ = ㅡ + ㅣ`.
