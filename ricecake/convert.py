@@ -152,7 +152,7 @@ def to_compat_jamo(jamo: str) -> str:
 
     with suppress(ValueError):
         i = o.jongseong_offset(jamo)
-        return JONGSEONG_TO_COMPAT_JAUM[i - 1]
+        return JONGSEONG_TO_COMPAT_JAUM[i]
 
     raise ValueError("expected a modern Hangul Jamo character")
 

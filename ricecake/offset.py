@@ -181,13 +181,19 @@ def jongseong_offset(c: str, /) -> int:
     This is because offset 0 is used to denote the lack of Jongseong
     when composing a Hangul Syllable from Jamo offsets and vice versa.
 
+    !!! warn
+        
+        When composing a Hangul Syllable from Cho/Jung/Jongseong offsets,
+        you must add 1 to the Jongseong offset because 0 is used to denote
+        the lack of Jongseong. e.g. `SYL = (CHO * 588) + (JUNG * 28) + (JONG + 1)`
+        Using the `compose()` API is recommended to avoid this caveat.
+
     Raises:
         ValueError: If the character is not a modern Hangul Jamo Jongseong.
     """
     code = ord(c)
     if MODERN_JONGSEONG_BASE <= code <= MODERN_JONGSEONG_END:
-        # FIX: should this +1 happen in `compose()` or here?
-        return code - MODERN_JONGSEONG_BASE + 1
+        return code - MODERN_JONGSEONG_BASE
     raise ValueError("expected a modern Hangul Jamo Jongseong character")
 
 
