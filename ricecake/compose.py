@@ -58,7 +58,7 @@ def compose(cho: str, jung: str, jong: str | None) -> str:
     """
     return chr(
         o.choseong_offset(cho) * o.CHOSEONG_COEF
-        + o.jongseong_offset(jung) * o.JUNGSEONG_COEF
+        + o.jungseong_offset(jung) * o.JUNGSEONG_COEF
         + (o.jongseong_offset(jong) if jong else 0)
         + o.SYLLABLE_BASE
     )
@@ -161,7 +161,7 @@ def decompose_jongseong(jongseong: str) -> tuple[str, str | None]:
     Raises:
         ValueError: If the character is not a Hangul Jamo Jongseong.
     """
-    return DECOMPOSE_JONGSEONG[o.jongseong_offset(jongseong)]
+    return DECOMPOSE_JONGSEONG[o.jongseong_offset(jongseong) - 1]
 
 
 # FEAT: decompose composite Jaum and Moum into tuple of str
