@@ -182,7 +182,7 @@ def jongseong_offset(c: str, /) -> int:
     when composing a Hangul Syllable from Jamo offsets and vice versa.
 
     !!! warn
-        
+
         When composing a Hangul Syllable from Cho/Jung/Jongseong offsets,
         you must add 1 to the Jongseong offset because 0 is used to denote
         the lack of Jongseong. e.g. `SYL = (CHO * 588) + (JUNG * 28) + (JONG + 1)`
