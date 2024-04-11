@@ -49,7 +49,6 @@ CHOSEONG_SEARCH_PATTERN = [
 ]
 
 
-# FIX: should take choseong instead of compat jaum this is weird
 def choseong_pattern(compat_jaum: str) -> str:
     i = compat_jaum_offset(compat_jaum)
     return CHOSEONG_SEARCH_PATTERN[i]
@@ -66,49 +65,45 @@ def incremental_pattern(c: str, /) -> str:
         return c
     cho, jung, jong = decompose(c)
 
-    # 2.1. Has Jongseong
-    if jong:
-        first, second = decompose_jongseong(jong)
-
-        # 2.1.1. Composite Jongseong
-        # "읽" -> "(?:읽|일[ㄱ가-깋])"
-        if second and first != second:
-            jong_removed = set_jongseong(c, first)  # "일"
-            cho_search = choseong_pattern(to_compat_jamo(second))  # "[ㄱ가-깋]"
-            return f"(?:{c}|{jong_removed}{cho_search})"
-
-        # 2.1.2. Single Jongseong
-        # "일" -> "(?:[일-잃]|이[ㄹ라-맇])"
-        jong_range = {
-            "ᆨ": "ᆪ",
-            "ᆫ": "ᆭ",
-            "ᆯ": "ᆶ",
-            "ᆸ": "ᆹ",
-            "ᆺ": "ᆻ",
-        }.get(jong)
-
-        # "일" -> "[일-잃]" / "잊" -> "잊"
-        jong_completion = f"[{c}-{set_jongseong(c, jong_range)}]" if jong_range else c
-        jong_removed = set_jongseong(c, None)  # "이"
-        cho_search = choseong_pattern(to_compat_jamo(jong))  # "[ㄹ라-맇]"
-        return f"(?:{jong_completion}|{jong_removed}{cho_search})"
-
-    # 2.2. No Jongseong
+    # 2.1. No Jongseong
     # "으" -> "[으-읳]" / "아" -> "[아-앟]"
+    if jong is None:
+        # NOTE: composability is based on Korean keyboard and IME behavior
+        # | `ㅐ`: can be typed directly from a keyboard.
+        # | `ㅢ`: can only be typed as `ㅡ + ㅣ`.
+        # | Thus, `ㅡ` is considered composable while `ㅏ` is not.
+        jung_range = {
+            "ᅩ": "ᅬ",
+            "ᅮ": "ᅱ",
+            "ᅳ": "ᅴ",
+        }.get(jung, jung)
+        return f"[{c}-{compose(cho, jung_range, 'ᇂ')}]"
 
-    # NOTE: Composability is based on Korean keyboard and IME behavior
-    # | By definition, `ㅐ = ㅏ + ㅣ` and `ㅢ = ㅡ + ㅣ`.
-    # | But `ㅐ` can be typed directly from a keyboard,
-    # | and some IMEs do not support incrementally typing `ㅐ` as `ㅏ+ ㅣ`.
-    # | `ㅢ` on the other hand can only be typed as `ㅡ + ㅣ`.
-    # | Thus, `ㅡ` is considered composable while `ㅏ` is not.
+    # 2.2. Has Jongseong
+    first, second = decompose_jongseong(jong)
 
-    jung_range = {
-        "ᅩ": "ᅬ",
-        "ᅮ": "ᅱ",
-        "ᅳ": "ᅴ",
-    }.get(jung, jung)
-    return f"[{c}-{compose(cho, jung_range, 'ᇂ')}]"
+    # 2.2.1. Composite Jongseong
+    # "읽" -> "(?:읽|일[ㄱ가-깋])"
+    if second and first != second:  # exclude ssangjaums
+        jong_removed = set_jongseong(c, first)  # "일"
+        cho_search = choseong_pattern(to_compat_jamo(second))  # "[ㄱ가-깋]"
+        return f"(?:{c}|{jong_removed}{cho_search})"
+
+    # 2.2.2. Single Jongseong
+    # "일" -> "(?:[일-잃]|이[ㄹ라-맇])"
+    jong_range = {
+        "ᆨ": "ᆪ",
+        "ᆫ": "ᆭ",
+        "ᆯ": "ᆶ",
+        "ᆸ": "ᆹ",
+        "ᆺ": "ᆻ",
+    }.get(jong)
+
+    # "일" -> "[일-잃]" / "잊" -> "잊"
+    jong_completion = f"[{c}-{set_jongseong(c, jong_range)}]" if jong_range else c
+    jong_removed = set_jongseong(c, None)  # "이"
+    cho_search = choseong_pattern(to_compat_jamo(jong))  # "[ㄹ라-맇]"
+    return f"(?:{jong_completion}|{jong_removed}{cho_search})"
 
 
 # DOC: did you know? writing human language is a lot harder than programming language
