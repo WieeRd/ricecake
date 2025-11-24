@@ -13,7 +13,7 @@ jobs:
     name: Pyright
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       # CI: LATER: activate pdm venv for 3rd party dependencies
       # | not required right now but discord.py converters are planned
       - uses: jakebailey/pyright-action@v2
@@ -24,7 +24,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: pdm-project/setup-pdm@v4
         with:
           python-version: "3.10"
