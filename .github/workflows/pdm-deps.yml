@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions: write-all
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: pdm-project/update-deps-action@main
         with:
           commit-message: "chore(deps): update pdm.lock"
