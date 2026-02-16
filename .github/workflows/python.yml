@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       # CI: LATER: activate pdm venv for 3rd party dependencies
       # | not required right now but discord.py converters are planned
-      - uses: jakebailey/pyright-action@v2
+      - uses: jakebailey/pyright-action@v3
 
   ruff:
     name: Ruff
